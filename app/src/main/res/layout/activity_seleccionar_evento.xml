@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SeleccionarEvento">
+
+    <RelativeLayout
+        android:id="@+id/Cabezera_lector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Selección Evento"
+                android:textColor="@color/texto_Titulo_Oscuro"
+                android:textSize="27dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Selecciona un evento para leer DNIs"
+                android:textColor="@color/texto_SubTitulo_Claro"
+                android:textSize="13.5dp" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.81"
+                android:background="@drawable/morado_esquinas_redondas"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/leer_qr" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refrescar_LV_Eventos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Cabezera_lector">
+
+        <ListView
+            android:id="@+id/LV_Eventos"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="60dp"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="27dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/TV_Eventos_Disponibles"
+        android:layout_width="wrap_content"
+        android:alpha="0"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/poppins"
+        android:gravity="center"
+        android:text="No hay eventos disponibles"
+        android:layout_marginHorizontal="20dp"
+        android:textColor="@color/texto_SubTitulo_Claro"
+        android:textSize="20.5dp" />
+
+</RelativeLayout>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LeerDNI">
+
+    <RelativeLayout
+        android:id="@+id/Cabezera_lector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/TV_Atras"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/poppins"
+            android:gravity="center_vertical"
+            android:paddingTop="4.5dp"
+            android:text="<"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="30dp" />
+
+        <LinearLayout
+            android:layout_toRightOf="@+id/TV_Atras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Lector"
+                android:textColor="@color/texto_Titulo_Oscuro"
+                android:textSize="27dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Escanea el DNI del asistente"
+                android:textColor="@color/texto_SubTitulo_Claro"
+                android:textSize="13.5dp" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.81"
+                android:background="@drawable/morado_esquinas_redondas"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/leer_qr" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:alpha="0"
+        android:layout_below="@id/Cabezera_lector"
+        android:layout_above="@id/LL_Botones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp">
+
+
+        <com.budiyev.android.codescanner.CodeScannerView
+            android:id="@+id/scanner_view"
+            app:maskVisible="false"
+            app:frameVisible="false"
+            app:autoFocusButtonVisible="true"
+            app:flashButtonVisible="true"
+            app:frameAspectRatioHeight="15"
+            app:frameAspectRatioWidth="9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/CV_barra_porcentaje"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginHorizontal="80dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="#00000000"
+                android:alpha="1"
+                app:cardElevation="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <View
+                        android:id="@+id/V_Barra_Vacia"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        android:alpha="0.2"
+                        android:background="@color/fondo_Morado"
+                        />
+
+                    <View
+                        android:id="@+id/V_Barra_Porcentaje"
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/V_Barra_Vacia"
+                        android:alpha="0"
+                        android:background="@color/fondo_Morado"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/TV_Porcentaje"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="0%"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="10dp"
+                        android:paddingTop="2.5dp"
+                        android:background="@color/float_transparent"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:id="@+id/RL_Informacion"
+                android:alpha="0"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/blanco_esquinas_redondas"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <TextView
+                    android:id="@+id/TV_Estado_Entrada"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="Leida"
+                    android:gravity="center"
+                    android:background="@drawable/amarillo_esquinas_redondas"
+                    android:textColor="@color/white"
+                    android:textSize="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_toRightOf="@id/TV_Estado_Entrada">
+
+                    <TextView
+                        android:id="@+id/TV_Nombre_Entrada"
+                        android:layout_width="wrap_content"
+                        android:layout_height="27dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="TodayParty Fiesta Neón + Semáforo"
+                        android:maxLines="1"
+                        android:ellipsize="middle"
+                        android:textColor="@color/texto_Titulo_Oscuro"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/TV_Descripcion_Entrada"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="Entrada: 14€ (+1€ G.d.G). Incluye 2 consumciones"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/texto_SubTitulo_Claro"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/CV_Nombre"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:elevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_marginHorizontal="7.5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="🕺"
+                            android:gravity="center"
+                            android:textSize="12dp"/>
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:text=""/>
+
+                        <TextView
+                            android:id="@+id/TV_Nombre_Asistente"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingTop="1.5dp"
+                            android:gravity="center"
+                            android:fontFamily="@font/poppins_medium"
+                            android:text="Iván Bes Zamorano"
+                            android:textColor="@color/gris_oscuro"
+                            android:textSize="10dp" />
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/CV_DNI"
+                    android:layout_toRightOf="@+id/CV_Nombre"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:elevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_marginHorizontal="7.5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="🪪"
+                            android:gravity="center"
+                            android:textSize="12dp"/>
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:text=""/>
+
+                        <TextView
+                            android:id="@+id/TV_DNI_Asistente"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingTop="1.5dp"
+                            android:gravity="center"
+                            android:fontFamily="@font/poppins_medium"
+                            android:text="73161118G"
+                            android:textColor="@color/gris_oscuro"
+                            android:textSize="10dp" />
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RL_Cargando"
+                android:alpha="0"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/blanco_esquinas_redondas"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    android:layout_centerInParent="true"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/spin_kit"
+                    style="@style/SpinKitView.FadingCircle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/fondo_Morado" />
+
+            </RelativeLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/LL_Botones"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:paddingTop="27dp"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="40dp"
+        android:orientation="horizontal"
+        android:clipToPadding="false"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/BT_Historial"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:elevation="4dp"
+            android:background="@drawable/morado_esquinas_redondas">
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="📄 Historial"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+        </RelativeLayout>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:id="@+id/BT_Asistentes"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:elevation="4dp"
+            android:background="@drawable/morado_esquinas_redondas">
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="🕺 Asistentes"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

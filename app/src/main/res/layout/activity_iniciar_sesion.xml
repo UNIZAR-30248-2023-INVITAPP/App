@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".IniciarSesion">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fiesta"
+        android:scaleType="centerCrop"
+        android:alpha="0.2"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fondo_Morado"
+        android:alpha="0.1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:elevation="30dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp"
+        android:clipToPadding="false"
+        android:background="@drawable/blanco_esquinas_redondas">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="InvitApp"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="27dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="37dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="🕺 Usuario"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/ED_Usuario"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/edit_text_como_ios"
+            android:fontFamily="@font/poppins"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="2.5dp"
+            android:maxLines="1"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="14dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="🔒 Contraseña"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/ED_Clave"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/edit_text_como_ios"
+            android:fontFamily="@font/poppins"
+            android:inputType="textPassword"
+            android:paddingTop="2.5dp"
+            android:maxLines="1"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="14dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="37dp" />
+
+        <RelativeLayout
+            android:id="@+id/BT_Iniciar_Sesion"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:elevation="5dp"
+            android:background="@drawable/morado_esquinas_redondas">
+            <TextView
+                android:id="@+id/TV_Iniciar_Sesion"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Iniciar Sesión"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:layout_centerInParent="true"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/circulo_cargando"
+                style="@style/SpinKitView.Small.FadingCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/white" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
