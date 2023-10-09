@@ -24,7 +24,7 @@
             android:fontFamily="@font/poppins"
             android:gravity="center_vertical"
             android:paddingTop="4.5dp"
-            android:text="<"
+            android:text=""
             android:textColor="@color/texto_Titulo_Oscuro"
             android:textSize="30dp" />
 
@@ -71,7 +71,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/leer_qr" />
+                android:src="@drawable/leerdni" />
 
         </RelativeLayout>
 
@@ -80,7 +80,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        android:alpha="0"
+        android:alpha="1"
         android:layout_below="@id/Cabezera_lector"
         android:layout_above="@id/LL_Botones"
         android:layout_width="match_parent"
@@ -174,7 +174,7 @@
 
             <RelativeLayout
                 android:id="@+id/RL_Informacion"
-                android:alpha="0"
+                android:alpha="1"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginHorizontal="10dp"
@@ -211,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="27dp"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="TodayParty Fiesta Neón + Semáforo"
+                        android:text="Evento de Prueba"
                         android:maxLines="1"
                         android:ellipsize="middle"
                         android:textColor="@color/texto_Titulo_Oscuro"
@@ -222,7 +222,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Entrada: 14€ (+1€ G.d.G). Incluye 2 consumciones"
+                        android:text="Invitacion sin copas"
                         android:maxLines="2"
                         android:ellipsize="end"
                         android:textColor="@color/texto_SubTitulo_Claro"

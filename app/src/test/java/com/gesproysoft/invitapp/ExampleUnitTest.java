@@ -1,4 +1,4 @@
-package com.taquillacentral.invitapp;
+package com.gesproysoft.invitapp;
 
 import org.junit.Test;
 
