@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "212401191901",
+    "project_id": "invitapp-13b6c",
+    "storage_bucket": "invitapp-13b6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212401191901:android:63bdacb23cd8ec37ff1434",
+        "android_client_info": {
+          "package_name": "com.gesproysoft.invitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212401191901-ikjdr3ov3g6kdj3pao7lc92jtinab9t2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeymvWG4DxACbgZYdZKnv1i01hkSTSH8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212401191901-ikjdr3ov3g6kdj3pao7lc92jtinab9t2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212401191901:android:9f1d82abf57e4cbeff1434",
+        "android_client_info": {
+          "package_name": "eina.unizar.invitapp_movil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212401191901-ikjdr3ov3g6kdj3pao7lc92jtinab9t2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeymvWG4DxACbgZYdZKnv1i01hkSTSH8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212401191901-ikjdr3ov3g6kdj3pao7lc92jtinab9t2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
