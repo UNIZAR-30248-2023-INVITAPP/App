@@ -13,11 +13,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PruebaFireBase extends AppCompatActivity {
@@ -35,7 +38,17 @@ public class PruebaFireBase extends AppCompatActivity {
             // When the button is pressed/clicked, it will run the code below
             @Override
             public void onClick(View view){
-                agnadirDocumento();
+                Boolean exitosa;
+                List<Boolean> respuesta = new ArrayList<>();
+                Funciones_FireBase f_FB = new Funciones_FireBase();
+                exitosa = f_FB.validarInvitacionActualiza("23344556Z", "hVWftX1RrgJgHuKwjucI", respuesta);
+                if(exitosa) {//Se ha establecido la consulta con exito
+                    if(respuesta.get(0)){
+                        Log.d("BOTON_1", "Esta invitado el usuario");
+                    } else {
+                        Log.d("BOTON_1", "No esta invitado el usuario");
+                    }
+                }
             }
         });
 
@@ -44,7 +57,7 @@ public class PruebaFireBase extends AppCompatActivity {
             // When the button is pressed/clicked, it will run the code below
             @Override
             public void onClick(View view){
-                leerDocumento();
+                prubasInfoEventos();
             }
         });
 
@@ -97,6 +110,62 @@ public class PruebaFireBase extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    /*Pruebas sobre la funcion InfoEventos*/
+    private void prubasInfoEventos() {
+        String log;
+        int pruebas = 2;//Numero de pruebas
+        int p_correcta = 0;
+        List<DocumentSnapshot> datos = new ArrayList<>();
+        Funciones_FireBase db = new Funciones_FireBase();
+
+        //Prueba 1: Se ha podido establecer la conexion con la coleccion eventos
+        log = "P_1_InfoEventos";
+        Log.d(log, "Prueba de conexion con coleccion de Eventos");
+        Boolean exitosa;
+        exitosa = db.infoEventos(datos);
+
+        if(exitosa){
+            Log.d(log, "CORRECTO---Conexion establecida");
+            p_correcta++;
+            for(DocumentSnapshot d: datos){
+                Log.d(log, "Datos de evento: " + d.getData());
+            }
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con infoEventos");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 2: Hay eventos creados en la BD
+        log = "P_2_InfoEventos";
+        Log.d(log, "Prueba de comprobar si hay eventos definidos");
+        exitosa = db.infoEventos(datos);
+
+        if(exitosa){
+            if(datos.size() > 0) {
+                Log.d(log, "CORRECTO---Conexion establecida");
+                p_correcta++;
+                for (DocumentSnapshot d : datos) {
+                    Log.d(log, "Datos de evento: " + d.getData());
+                }
+            } else {
+                Log.d(log, "INCORRECTO---No hay eventos definidos");
+            }
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con infoEventos");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Verificacion de que pasa todas las pruebas
+        log = "P_FINAL_InfoEventos";
+        if(p_correcta == pruebas){
+            Log.d(log, "¡¡¡TESTS CORRECTOS!!!");
+        } else {
+            Log.i(log, "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
     }
 
 }

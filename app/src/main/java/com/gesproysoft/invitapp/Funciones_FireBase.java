@@ -178,7 +178,7 @@ public class Funciones_FireBase {
      *  true    la lectura de los datos a sido exitosa (aunque no haya contenido)
      *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la lectura)
      * */
-    private boolean validarInvitacionActualiza(String DNI, String id_evento, List<Boolean> resultado) {
+    public boolean validarInvitacionActualiza(String DNI, String id_evento, List<Boolean> resultado) {
         String tag = "F_VALIDAR_INVIT";
 
         // Access a Cloud Firestore instance from your Activity
