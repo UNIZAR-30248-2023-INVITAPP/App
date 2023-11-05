@@ -57,7 +57,8 @@ public class PruebaFireBase extends AppCompatActivity {
             // When the button is pressed/clicked, it will run the code below
             @Override
             public void onClick(View view){
-                prubasInfoEventos();
+                //prubasInfoEventos();
+                prubasValidarInvitacionActualiza("23344556Z","hVWftX1RrgJgHuKwjucI");
             }
         });
 
@@ -112,7 +113,9 @@ public class PruebaFireBase extends AppCompatActivity {
                 });
     }
 
-    /*Pruebas sobre la funcion InfoEventos*/
+    /**
+     * Pruebas sobre la funcion InfoEventos
+     */
     private void prubasInfoEventos() {
         String log;
         int pruebas = 2;//Numero de pruebas
@@ -162,6 +165,100 @@ public class PruebaFireBase extends AppCompatActivity {
         //Verificacion de que pasa todas las pruebas
         log = "P_FINAL_InfoEventos";
         if(p_correcta == pruebas){
+            Log.d(log, "¡¡¡TESTS CORRECTOS!!!");
+        } else {
+            Log.i(log, "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
+    }
+
+    /**
+     * Pruebas sobre la funcion InfoEventos:
+     * Ha esta función se le pasa el DNI de un invitado existente
+     * en el evento del id_evento dado
+     */
+    private void prubasValidarInvitacionActualiza(String DNI, String id_evento) {
+        String log;
+        int pruebas = 4;//Numero de pruebas
+        int p_correcta = 0;
+        Funciones_FireBase db = new Funciones_FireBase();
+
+        //Prueba 1: Se ha podido establecer la conexion con la coleccion de Invitados
+        log = "P_1_ValInvAct";
+        Log.d(log, "Prueba de conexion con coleccion de invitados");
+
+        Boolean exitosa;
+        List<Boolean> respuesta = new ArrayList<>();
+        exitosa = db.validarInvitacionActualiza("456g", id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            Log.d(log, "CORRECTO---Conexion establecida");
+            p_correcta++;
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 2: El DNI pertenece a un usuario que esta invitado en el evento
+        log = "P_2_ValInvAct";
+        Log.d(log, "Prueba de validacion de un usuario que esta invitado");
+
+        exitosa = db.validarInvitacionActualiza(DNI, id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0)){
+                Log.d(log, "CORRECTO---Hay invitado con ese DNI en la tabla de Invitados");
+                p_correcta++;
+
+            } else {
+                Log.d(log, "INCORRECTO---No existe el invitado con ese DNI en la tabla de Invitados");
+            }
+
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 3: El DNI no pertenece a un usuario que esta invitado en el evento
+        log = "P_3_ValInvAct";
+        Log.d(log, "Prueba de validacion de un usuario que no esta invitado");
+
+        exitosa = db.validarInvitacionActualiza("456g", id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0)){
+                Log.d(log, "INCORRECTO---Hay invitado con ese DNI en la tabla de Invitados");
+            } else {
+                Log.d(log, "CORRECTO---No existe el invitado con ese DNI en la tabla de Invitados");
+                p_correcta++;
+            }
+
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 4: No existen eventos con ese id
+        log = "P_4_ValInvAct";
+        Log.d(log, "Prueba de comportamiento ante id de un evento no existente");
+
+        exitosa = db.validarInvitacionActualiza(DNI, "abcdef", respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0)){
+                Log.d(log, "INCORRECTO---Existe esa tabla de eventos");
+            } else {
+                Log.d(log, "CORRECTO---No existen eventos con ese identificador");
+                p_correcta++;
+            }
+
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Verificacion de que pasa todas las pruebas
+        log = "P_FINAL_InfoEventos";
+        if (p_correcta == pruebas) {
             Log.d(log, "¡¡¡TESTS CORRECTOS!!!");
         } else {
             Log.i(log, "¡¡¡FALLO EN LAS PRUEBAS!!!");
