@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InvitApp"
         tools:targetApi="31">
+        <activity
+            android:name=".MostrarAsistentes"
+            android:exported="false" />
         <activity
             android:name=".LeerDNI"
             android:exported="false" />
@@ -29,15 +30,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PruebaFireBase"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

@@ -1,0 +1,191 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/RL_Asistentes"
+    tools:context=".MostrarAsistentes">
+
+    <RelativeLayout
+        android:id="@+id/Cabezera_lector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/TV_Atras"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text=""
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:paddingTop="4.5dp"
+            android:textColor="@color/texto_Titulo_Oscuro"
+            android:textSize="30dp" />
+
+        <LinearLayout
+            android:layout_toRightOf="@+id/TV_Atras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:id="@+id/TV_Nombre_Evento_Cabecera"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Nombre del evento"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/texto_Titulo_Oscuro"
+                android:textSize="27dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Listado de Asistentes"
+                android:textColor="@color/texto_SubTitulo_Claro"
+                android:textSize="13.5dp" />
+
+        </LinearLayout>
+
+
+        <!--<RelativeLayout
+            android:alpha="0"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.81"
+                android:background="@drawable/morado_esquinas_redondas"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/leer_qr" />
+
+        </RelativeLayout>
+        -->
+
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/TV_VACIO_1"
+        android:layout_below="@id/Cabezera_lector"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#E5E5EA"
+        />
+
+    <EditText
+        android:id="@+id/ED_Buscar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/TV_VACIO_1"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/IV_Buscar"
+        android:background="@drawable/edit_text_como_ios"
+        android:fontFamily="@font/poppins"
+        android:hint="Buscar por nombre"
+        android:paddingHorizontal="10dp"
+        android:textColor="@color/texto_Titulo_Oscuro"
+        android:textColorHint="@color/gray_btn_bg_color"
+        android:textSize="14dp" />
+
+    <ImageView
+        android:id="@+id/IV_Buscar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/lupa"
+        android:padding="10dp"
+        android:layout_below="@+id/TV_VACIO_1"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/morado_esquinas_redondas"
+        android:elevation="5dp" />
+    <RelativeLayout
+        android:id="@+id/RL_Cargando"
+        android:alpha="0"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/TV_VACIO_1"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/morado_esquinas_redondas">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:layout_centerInParent="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Small.FadingCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/white" />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/TV_VACIO_2"
+        android:layout_below="@id/ED_Buscar"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#E5E5EA"
+        />
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refrescar_LV_Asistentes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/TV_VACIO_2">
+
+        <ListView
+            android:id="@+id/LV_Asistentes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="15dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="60dp"
+            android:scrollbars="none" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/TV_Ningun_Asistente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:alpha="0"
+        android:layout_marginHorizontal="20dp"
+        android:fontFamily="@font/poppins"
+        android:gravity="center"
+        android:text="No hay ningún asistente"
+        android:textColor="@color/texto_SubTitulo_Claro"
+        android:textSize="20.5dp" />
+
+</RelativeLayout>

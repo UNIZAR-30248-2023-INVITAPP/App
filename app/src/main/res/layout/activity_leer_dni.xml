@@ -91,7 +91,7 @@
         app:cardElevation="4dp">
 
 
-        <com.budiyev.android.codescanner.CodeScannerView
+        <androidx.camera.view.PreviewView
             android:id="@+id/scanner_view"
             app:maskVisible="false"
             app:frameVisible="false"
@@ -194,7 +194,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Leida"
                     android:gravity="center"
-                    android:background="@drawable/amarillo_esquinas_redondas"
+                    android:background="@drawable/verde_esquinas_redondas"
                     android:textColor="@color/white"
                     android:textSize="10dp"/>
 
@@ -222,7 +222,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Invitacion sin copas"
+                        android:text="Entrada de invitación, no incluye consumiciones"
                         android:maxLines="2"
                         android:ellipsize="end"
                         android:textColor="@color/texto_SubTitulo_Claro"
@@ -361,40 +361,20 @@
         android:layout_alignParentBottom="true">
 
         <RelativeLayout
-            android:id="@+id/BT_Historial"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="45dp"
-            android:elevation="4dp"
-            android:background="@drawable/morado_esquinas_redondas">
-            <TextView
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="📄 Historial"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
-
-        </RelativeLayout>
-        <View
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
-        <RelativeLayout
             android:id="@+id/BT_Asistentes"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="45dp"
             android:elevation="4dp"
             android:background="@drawable/morado_esquinas_redondas">
+
             <TextView
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:fontFamily="@font/poppins_medium"
-                android:text="🕺 Asistentes"
                 android:gravity="center"
+                android:text="🕺 Listado de Asistentes"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
 

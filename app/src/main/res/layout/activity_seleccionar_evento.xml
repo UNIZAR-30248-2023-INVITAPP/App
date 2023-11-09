@@ -89,13 +89,13 @@
     <TextView
         android:id="@+id/TV_Eventos_Disponibles"
         android:layout_width="wrap_content"
-        android:alpha="0"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginHorizontal="20dp"
+        android:alpha="0"
         android:fontFamily="@font/poppins"
         android:gravity="center"
         android:text="No hay eventos disponibles"
-        android:layout_marginHorizontal="20dp"
         android:textColor="@color/texto_SubTitulo_Claro"
         android:textSize="20.5dp" />
 

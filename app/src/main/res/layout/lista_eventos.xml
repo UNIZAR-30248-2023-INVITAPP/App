@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/transparente_esquinas_redondas">
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/IV_Fondo_Evento"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/transparente_esquinas_redondas"
+            android:src="@drawable/ic_launcher_background"/>
+        <ImageView
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@drawable/transparente_esquinas_redondas"
+            android:src="@drawable/degradado_transparente_a_negro"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/TV_Nombre_Evento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_semibold"
+                android:maxLines="1"
+                android:text="TomorrowParty University"
+                android:textColor="@color/white"
+                android:textSize="19dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/lugar"
+                    app:tint="@color/white" />
+                <TextView
+                    android:paddingTop="2.5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:id="@+id/TV_Lugar_Evento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Ubicacion"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/esquinas_view_fecha"
+            app:blurOverlayColor="#19FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:paddingVertical="11dp"
+                    android:paddingHorizontal="8dp"
+                    android:src="@drawable/calendario"
+                    app:tint="@color/white" />
+                <TextView
+                    android:id="@+id/TV_Fecha_Evento"
+                    android:layout_marginRight="8dp"
+                    android:paddingTop="2.5dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="15-Mar-23"
+                    android:textColor="@color/white"
+                    android:textSize="13.5dp" />
+            </LinearLayout>
+
+        </eightbitlab.com.blurview.BlurView>
+    </RelativeLayout>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:layout_centerInParent="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/circulo_cargando"
+        style="@style/SpinKitView.Small.FadingCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:alpha="0"
+        app:SpinKit_Color="@color/white" />
+
+</androidx.cardview.widget.CardView>

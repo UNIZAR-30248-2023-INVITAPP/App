@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
+
+    <RelativeLayout
+        android:id="@+id/RL_Informacion"
+        android:alpha="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/blanco_esquinas_redondas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/TV_Estado_Entrada"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="No\nLeida"
+            android:gravity="center"
+            android:background="@drawable/gris_esquinas_redondas"
+            android:textColor="@color/white"
+            android:textSize="10dp"/>
+
+        <RelativeLayout
+            android:id="@+id/RL_Cargando"
+            android:alpha="0"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/gris_esquinas_redondas">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Small.FadingCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/white" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_toRightOf="@id/TV_Estado_Entrada">
+
+            <TextView
+                android:id="@+id/TV_Nombre_Entrada"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Evento de Prueba"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                android:textColor="@color/texto_Titulo_Oscuro"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/TV_Descripcion_Entrada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Entrada de invitación, no incluye consumiciones"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/texto_SubTitulo_Claro"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/CV_Nombre"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:elevation="2dp"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_marginHorizontal="7.5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="🕺"
+                    android:gravity="center"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/TV_Nombre_Asistente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:paddingTop="1.5dp"
+                    android:text="Iván Bes Zamorano"
+                    android:textColor="@color/gris_oscuro"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/CV_DNI"
+            android:layout_toRightOf="@+id/CV_Nombre"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:elevation="2dp"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_marginHorizontal="7.5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="🎟️"
+                    android:gravity="center"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/TV_DNI_Asistente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingTop="1.5dp"
+                    android:gravity="center"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="73161118G"
+                    android:textColor="@color/gris_oscuro"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <com.github.angads25.toggle.widget.LabeledSwitch
+            android:id="@+id/Toggle_Leer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:enabled="true"
+            app:on="false"
+            app:textOn="Leida"
+            app:textOff="Leer"
+            app:colorOn="@color/fondo_Morado"
+            app:colorBorder="@color/fondo_Morado"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
