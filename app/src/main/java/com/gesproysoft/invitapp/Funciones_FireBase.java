@@ -238,43 +238,45 @@ public class Funciones_FireBase {
     Boolean exitosa;
     List<Boolean> respuesta = new ArrayList<>();
     Funciones_FireBase f_FB = new Funciones_FireBase();
-    exitosa = f_FB.iniciarSesion("Y7b82dz6CaxuljLr9ANE", respuesta);
+    exitosa = f_FB.iniciarSesion("Y7b82dz6CaxuljLr9ANE", "12345", respuesta);
     if(exitosa) {//Se ha establecido la consulta con exito
         if(respuesta.get(0)){
-            Log.d("BOTON_ESC", "Existe el organizador");
+            Log.d("BOTON_LEER", "Existe el organizador con esa password");
         } else {
-                Log.d("BOTON_ESC", "No existe el organizador");
-                    }
+            Log.d("BOTON_LEER", "No existe el organizador con esa password");
+        }
     } else {
-        Log.d("BOTON_ESC", "Fallo en la lectura de los datos de iniciarSesion");
+        Log.d("BOTON_LEER", "Fallo en la lectura de los datos de iniciarSesion");
     }
     */
 
     /**
-     * Comprueba que el organizador con ese id existe en la tabla de Organizadores, y por lo
+     * Comprueba que el organizador con ese id y password existe en la tabla de Organizadores, y por lo
      * tanto se encuentra registrado en el sistema.
      * Argumentos:
      *  id_organizador -> pasamos el identificador del organizador a comprobar
+     *  password -> pasamos el password del organizador
      *  resultado -> guarda un List<Boolean> que contiene en su posicion 0, true o false
-     *              true    hay organizador con ese DNI
+     *              true    hay organizador con ese DNI y password
      *              false   no hay organizador con ese DNI
      * Devuelve:
      *  true    la lectura de los datos a sido exitosa (aunque no haya contenido)
      *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la lectura)
      * */
-    public boolean iniciarSesion(String id_organizador, List<Boolean> resultado) {
+    public boolean iniciarSesion(String id_organizador, String password, List<Boolean> resultado) {
         String tag = "F_INICIAR_SESION";
 
         // Access a Cloud Firestore instance from your Activity
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        DocumentReference collectRef = db.collection("Organizadores").document(id_organizador);
+        DocumentReference docRef = db.collection("Organizadores").document(id_organizador);
 
         Task<DocumentSnapshot> tarea;
 
         resultado.clear();//Limpiamos el contenido de la lista
 
-        tarea = collectRef.get();//Solicitamos la información del organizador
+        //Consulta que busca ese documento con el id dado
+        tarea = docRef.get();
 
         //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
         for(int i = 0; i < 15 && !tarea.isComplete(); i++){
@@ -293,15 +295,21 @@ public class Funciones_FireBase {
                 Log.d("EXCEPCION",e.toString());
             }
             if(tarea.isSuccessful()){
-                DocumentSnapshot document = tarea.getResult();
-                if (document.exists()) {
-                    Log.d(tag, "Hay organizador con ese id");
-                    resultado.add(true);//Existe el organizador
+                DocumentSnapshot doc = tarea.getResult();
+                if (doc.exists()) {//Hay documento con ese id
+                    String pass = (String)doc.get("password");
+                    if(password.equals(pass)) {//Coincide la constraseña
+                        resultado.add(true);//Coincide el password
+                        Log.d(tag, "Hay organizador con el id y password suministradas");
+                    }else{
+                        resultado.add(false);//No cincide el password
+                        Log.d(tag, "No coincide la password suministrada");
+                    }
                 } else {
-                    Log.d(tag, "No hay organizador con ese id");
-                    resultado.add(false);//No existe el organizador
+                    resultado.add(false);
+                    Log.d(tag, "No hay organizadores con ese id");
                 }
-                return true;
+                return true;//Se ha establecido la comunicacion
             } else {
                 Log.d(tag, "Lectura no exitosa");
             }

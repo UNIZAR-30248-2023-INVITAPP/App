@@ -40,23 +40,18 @@ public class PruebaFireBase extends AppCompatActivity {
             // When the button is pressed/clicked, it will run the code below
             @Override
             public void onClick(View view){
-
                 Boolean exitosa;
-                List<DocumentSnapshot> resultado = new ArrayList<>();
+                List<Boolean> respuesta = new ArrayList<>();
                 Funciones_FireBase f_FB = new Funciones_FireBase();
-                exitosa = f_FB.infoEventosOrganizador("Y7b82dz6CaxuljLr9ANE", resultado);
-
-                if(exitosa){
-                    if(resultado.size() > 0) {//Hay eventos
-                        Log.d("BOTON_LEER", "Hay eventos con ese organizador");
-                        for (DocumentSnapshot d : resultado) {
-                            Log.d("BOTON_LEER", "Datos de evento: " + d.getData());
-                        }
-                    } else{
-                        Log.d("BOTON_LEER", "No hay eventos con ese organizador");
+                exitosa = f_FB.iniciarSesion("Y7b82dz6CaxuljLr9ANE", "12345", respuesta);
+                if(exitosa) {//Se ha establecido la consulta con exito
+                    if(respuesta.get(0)){
+                        Log.d("BOTON_LEER", "Existe el organizador con esa password");
+                    } else {
+                        Log.d("BOTON_LEER", "No existe el organizador con esa password");
                     }
                 } else {
-                    Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
+                    Log.d("BOTON_LEER", "Fallo en la lectura de los datos de iniciarSesion");
                 }
             }
         });
