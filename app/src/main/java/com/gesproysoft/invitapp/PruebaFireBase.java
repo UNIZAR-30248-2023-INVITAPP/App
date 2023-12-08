@@ -39,19 +39,20 @@ public class PruebaFireBase extends AppCompatActivity {
         myButton1.setOnClickListener(new View.OnClickListener(){
             // When the button is pressed/clicked, it will run the code below
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Boolean exitosa;
                 List<Boolean> respuesta = new ArrayList<>();
                 Funciones_FireBase f_FB = new Funciones_FireBase();
-                exitosa = f_FB.iniciarSesion("Y7b82dz6CaxuljLr9ANE", "12345", respuesta);
-                if(exitosa) {//Se ha establecido la consulta con exito
-                    if(respuesta.get(0)){
-                        Log.d("BOTON_LEER", "Existe el organizador con esa password");
+                String DNI = "12345678Z", id_evento = "EuhJJf2RwRUAnIjEu9oj";
+                exitosa = f_FB.validarInvitacionActualiza(DNI, id_evento, respuesta);
+                if (exitosa) {//Se ha establecido la consulta con exito
+                    if (respuesta.get(0)) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados");
                     } else {
-                        Log.d("BOTON_LEER", "No existe el organizador con esa password");
+                        Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
                     }
                 } else {
-                    Log.d("BOTON_LEER", "Fallo en la lectura de los datos de iniciarSesion");
+                    Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizada");
                 }
             }
         });

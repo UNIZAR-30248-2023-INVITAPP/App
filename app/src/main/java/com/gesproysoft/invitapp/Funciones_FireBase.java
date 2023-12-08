@@ -4,7 +4,8 @@ import android.util.Log;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -166,9 +167,25 @@ public class Funciones_FireBase {
         return false;
     }
 
-
+/*
+                Boolean exitosa;
+                List<Boolean> respuesta = new ArrayList<>();
+                Funciones_FireBase f_FB = new Funciones_FireBase();
+                String DNI = "12345678Z", id_evento = "EuhJJf2RwRUAnIjEu9oj";
+                exitosa = f_FB.validarInvitacionActualiza(DNI, id_evento, respuesta);
+                if (exitosa) {//Se ha establecido la consulta con exito
+                    if (respuesta.get(0)) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados");
+                    } else {
+                        Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
+                    }
+                } else {
+                    Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizada");
+                }
+*/
     /**
-     * Comprueba que el invitado con ese DNI se encuentre invitado en el evento seleccionado
+     * Comprueba que el invitado con ese DNI se encuentre invitado en el evento seleccionado, y
+     * actualiza el campo "asistido" a true y pone el campo "hora_asistiedo" con el timestamp actual
      * Argumentos:
      *  id_evento -> pasamos el identificador del evento donde comprobar si esta invitado
      *  resultado -> guarda un List<Boolean> que contiene en su posicion 0, true o false
@@ -191,7 +208,7 @@ public class Funciones_FireBase {
 
         resultado.clear();//Limpiamos el contenido de la lista
 
-        tarea = collectRef.whereEqualTo("dni", DNI).get();//Solicitamos la información del evento
+        tarea = collectRef.whereEqualTo("DNI", DNI).get();//Solicitamos la información del evento
 
         //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
         for(int i = 0; i < 15 && !tarea.isComplete(); i++){
@@ -215,7 +232,10 @@ public class Funciones_FireBase {
                     DocumentSnapshot doc = query_docs.getDocuments().get(0);//Obtenemos el invitado que coincide
                     DocumentReference docRef = db.collection("Eventos").document(id_evento)
                             .collection("Invitados").document(doc.getId());
-                    docRef.update("asistido", true);//Actualizamos el campo "asistido" a true del invitado
+                    docRef.update(
+                            "asistido", true,
+                            "hora_asistido", FieldValue.serverTimestamp()
+                            );//Actualizamos el campo "asistido" a true del invitado y su hora de asistencia
 
                     resultado.add(true);//Esta invitado
                     Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");
