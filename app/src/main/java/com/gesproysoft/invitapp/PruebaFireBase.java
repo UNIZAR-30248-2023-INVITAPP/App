@@ -41,19 +41,23 @@ public class PruebaFireBase extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Boolean exitosa;
-                List<Boolean> respuesta = new ArrayList<>();
+                List<DocumentSnapshot> resultado = new ArrayList<>();
                 Funciones_FireBase f_FB = new Funciones_FireBase();
-                String DNI = "12345678Z", id_evento = "EuhJJf2RwRUAnIjEu9oj";
-                exitosa = f_FB.validarInvitacionActualiza(DNI, id_evento, respuesta);
-                if (exitosa) {//Se ha establecido la consulta con exito
-                    if (respuesta.get(0)) {
-                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados");
-                    } else {
-                        Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
+                exitosa = f_FB.infoEventosOrganizador("Y7b82dz6CaxuljLr9ANE", resultado);
+
+                if(exitosa){
+                    if(resultado.size() > 0) {//Hay eventos
+                        Log.d("BOTON_LEER", "Hay eventos con ese organizador");
+                        for (DocumentSnapshot d : resultado) {
+                            Log.d("BOTON_LEER", "Datos de evento " + d.getId() + ": " + d.getData());
+                        }
+                    } else{
+                        Log.d("BOTON_LEER", "No hay eventos con ese organizador");
                     }
                 } else {
-                    Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizada");
+                    Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
                 }
+
             }
         });
 
