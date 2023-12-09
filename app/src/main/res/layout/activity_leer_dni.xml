@@ -91,7 +91,7 @@
         app:cardElevation="4dp">
 
 
-        <androidx.camera.view.PreviewView
+        <com.budiyev.android.codescanner.CodeScannerView
             android:id="@+id/scanner_view"
             app:maskVisible="false"
             app:frameVisible="false"

@@ -100,10 +100,14 @@ public class SeleccionarEvento extends AppCompatActivity {
         idEvento.clear();
         lugarEvento.clear();
 
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
+        String U_Identificador = sharedPreferences.getString("U_Identificador", ""); // Recupera el valor almacenado en "U_Nombre"
+
         List<DocumentSnapshot> datos = new ArrayList<>();
         Funciones_FireBase db = new Funciones_FireBase();
 
         Boolean exitosa;
+        //exitosa = db.infoEventosOrganizador(U_Identificador,datos);
         exitosa = db.infoEventos(datos);
 
         if(exitosa){

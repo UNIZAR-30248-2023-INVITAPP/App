@@ -1,6 +1,7 @@
 package com.gesproysoft.invitapp;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.util.Log;
@@ -27,13 +29,32 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.Result;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.nio.ByteBuffer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
@@ -41,20 +62,45 @@ public class LeerDNI extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
+    private CodeScanner mCodeScanner;
 
     private HandlerThread backgroundThread;
     private Handler backgroundHandler;
     private TessBaseAPI tessBaseAPI;
-    String eNombre;
+    CardView CV_Nombre, CV_Dni, CV_Ppal;
+    String eNombre,eId;
     TextView TV_Atras,TV_Nombre_Evento;
     RelativeLayout BT_Asistentes;
+
+    TextView TV_Porcentaje;
+    View V_Barra_Porcentaje, V_Barra_Vacia;
+    RelativeLayout RL_Cargando, RL_Informacion;
+    Boolean puedeLeer = true;
+    String url_Get_Info;
+    TextView TV_Descripcion_Entrada, TV_Nombre_Asistente, TV_DNI_Asistente, TV_Estado_Entrada;
+
+    private Handler handler,handler2;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leer_dni);
-        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-        previewView = findViewById(R.id.scanner_view);
+
+        CV_Dni = findViewById(R.id.CV_DNI);
+        CV_Nombre = findViewById(R.id.CV_Nombre);
+        CV_Ppal = findViewById(R.id.card_view);
+        TV_Estado_Entrada = findViewById(R.id.TV_Estado_Entrada);
+        TV_DNI_Asistente = findViewById(R.id.TV_DNI_Asistente);
+        TV_Nombre_Asistente = findViewById(R.id.TV_Nombre_Asistente);
+        TV_Descripcion_Entrada = findViewById(R.id.TV_Descripcion_Entrada);
+        TV_Porcentaje = findViewById(R.id.TV_Porcentaje);
+        V_Barra_Porcentaje = findViewById(R.id.V_Barra_Porcentaje);
+        V_Barra_Vacia = findViewById(R.id.V_Barra_Vacia);
+        RL_Informacion = findViewById(R.id.RL_Informacion);
+        RL_Cargando = findViewById(R.id.RL_Cargando);
+        RL_Cargando.setAlpha(0f);
+        RL_Informacion.setAlpha(0f);
 
         BT_Asistentes = findViewById(R.id.BT_Asistentes);
         BT_Asistentes.setOnClickListener(new View.OnClickListener() {
@@ -75,149 +121,99 @@ public class LeerDNI extends AppCompatActivity {
             }
         });
 
-        if (allPermissionsGranted()) {
-            startCamera();
-            //startCameraWithTimer();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 200);
         }
-
-        tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.init(getExternalFilesDir(null).getAbsolutePath(), "spa");
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
         eNombre = sharedPreferences.getString("E_NombreEvento", ""); // Recupera el valor almacenado en "U_Nombre"
+        eId = sharedPreferences.getString("E_IdEvento", "");
 
         TV_Nombre_Evento.setText(eNombre);
 
-    }
 
-    private boolean allPermissionsGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
+        handler2 = new Handler(Looper.getMainLooper());
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (allPermissionsGranted()) {
-                //startCamera();
-                //startCameraWithTimer();
-            } else {
-                // Handle permission denial if needed.
-            }
-        }
-    }
-
-    private void startCamera() {
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider);
-            } catch (ExecutionException | InterruptedException e) {
-                // No errors need to be handled for this Future.
-                // This should never be reached.
-            }
-        }, ContextCompat.getMainExecutor(this));
-    }
-
-    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        Preview preview = new Preview.Builder().build();
-
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
-    }
-
-    private void startCameraWithTimer() {
-        backgroundThread = new HandlerThread("CameraThread", Process.THREAD_PRIORITY_BACKGROUND);
-        backgroundThread.start();
-        backgroundHandler = new Handler(backgroundThread.getLooper());
-
-        final int delayMillis = 2000; // Capture every 2 seconds
-
-        Runnable captureRunnable = new Runnable() {
+        handler2.postDelayed(new Runnable() {
             @Override
             public void run() {
-                captureImageAndProcessText();
-                backgroundHandler.postDelayed(this, delayMillis);
+                // Código que se ejecutará después de 1 segundo
+                ObjectAnimator animator = ObjectAnimator.ofFloat(CV_Ppal, "alpha", 0f, 1f);
+                animator.setDuration(200); // Duración de la animación en milisegundos (0.2 segundos)
+
+                // Iniciar la animación
+                animator.start();
             }
-        };
+        }, 500);
 
-        backgroundHandler.postDelayed(captureRunnable, delayMillis);
-    }
+        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCodeScanner.startPreview();
+                        if(puedeLeer){
+                            puedeLeer=false;
 
-    private void captureImageAndProcessText() {
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider);
+                            RL_Informacion.setAlpha(0f);
+                            RL_Cargando.setAlpha(1f);
 
-                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build();
-
-                // Utiliza ContextCompat.getMainExecutor(this) para obtener un Executor adecuado
-                Executor executor = ContextCompat.getMainExecutor(this);
-
-                imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
-                    @OptIn(markerClass = ExperimentalGetImage.class) @Override
-                    public void analyze(@NonNull ImageProxy image) {
-                        // Procesa la imagen y extrae texto usando Tesseract
-
-                        // Obtén la imagen de la cámara como un objeto Image
-                        Image mediaImage = image.getImage();
-
-                        if (mediaImage != null) {
-                            // Convierte la imagen a un formato adecuado para Tesseract
-                            ByteBuffer buffer = mediaImage.getPlanes()[0].getBuffer();
-                            byte[] bytes = new byte[buffer.remaining()];
-                            buffer.get(bytes);
-
-                            // Configura Tesseract con la imagen
-                            tessBaseAPI.setImage(bytes, mediaImage.getWidth(), mediaImage.getHeight(), 0, mediaImage.getWidth());
-
-                            // Realiza el reconocimiento de texto
-                            String recognizedText = tessBaseAPI.getUTF8Text();
-
-                            // Aquí tienes el texto reconocido, puedes hacer lo que desees con él
-                            Log.d("OCR Text", recognizedText);
-
-                            // Asegúrate de liberar los recursos de la imagen
-                            mediaImage.close();
+                            Funciones_FireBase db = new Funciones_FireBase();
+                            Boolean exitosa;
+                            List<Boolean> respuesta = new ArrayList<>();
+                            exitosa = db.validarInvitacionActualiza(result.getText(), eId, respuesta);
                         }
 
-                        // Asegúrate de liberar los recursos de la imagen de la cámara
-                        image.close();
+
                     }
                 });
-
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-
-                Preview preview = new Preview.Builder().build();
-
-                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, imageAnalysis, preview);
-            } catch (ExecutionException | InterruptedException e) {
-                // Maneja errores si es necesario.
             }
-        }, ContextCompat.getMainExecutor(this));
+        });
+
+    }
+
+    public void permitirLeer(int milisegundos){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Código que se ejecutará después de x segundos en el hilo de fondo
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Código que se ejecutará en el hilo de la interfaz de usuario
+                        puedeLeer = true;
+                    }
+                });
+            }
+        }, milisegundos);
+    }
+
+    public void actualizarPorcentaje(){}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+        handler.postDelayed(runnable, 0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCodeScanner.releaseResources();
+        handler.removeCallbacks(runnable);
     }
 
 
 
 
-/*
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        tessBaseAPI.end();
-        backgroundHandler.removeCallbacksAndMessages(null);
-        backgroundThread.quitSafely();
-    }*/
+
+
+
+
 }
