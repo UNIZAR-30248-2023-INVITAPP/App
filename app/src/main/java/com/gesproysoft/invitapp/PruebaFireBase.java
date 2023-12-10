@@ -41,23 +41,21 @@ public class PruebaFireBase extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Boolean exitosa;
-                List<DocumentSnapshot> resultado = new ArrayList<>();
+                List<Integer> respuesta = new ArrayList<>();
                 Funciones_FireBase f_FB = new Funciones_FireBase();
-                exitosa = f_FB.infoEventosOrganizador("Y7b82dz6CaxuljLr9ANE", resultado);
-
-                if(exitosa){
-                    if(resultado.size() > 0) {//Hay eventos
-                        Log.d("BOTON_LEER", "Hay eventos con ese organizador");
-                        for (DocumentSnapshot d : resultado) {
-                            Log.d("BOTON_LEER", "Datos de evento " + d.getId() + ": " + d.getData());
-                        }
-                    } else{
-                        Log.d("BOTON_LEER", "No hay eventos con ese organizador");
+                String DNI = "12345678Z", id_evento = "EuhJJf2RwRUAnIjEu9oj";
+                exitosa = f_FB.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+                if (exitosa) {//Se ha establecido la consulta con exito
+                    if (respuesta.get(0) == 0) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido false)");
+                    } else if(respuesta.get(0) == 1) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido true)");
+                    } else {
+                        Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
                     }
                 } else {
-                    Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
+                    Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizadaReg");
                 }
-
             }
         });
 
