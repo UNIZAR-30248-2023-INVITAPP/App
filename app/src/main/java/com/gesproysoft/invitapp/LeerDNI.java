@@ -285,14 +285,14 @@ public class LeerDNI extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mCodeScanner.startPreview();
-        handler.postDelayed(runnable, 0);
+        //handler.postDelayed(runnable, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mCodeScanner.releaseResources();
-        handler.removeCallbacks(runnable);
+        //handler.removeCallbacks(runnable);
     }
 
 

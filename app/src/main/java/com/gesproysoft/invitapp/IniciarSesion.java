@@ -130,6 +130,7 @@ public class IniciarSesion extends AppCompatActivity implements
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -161,11 +162,20 @@ public class IniciarSesion extends AppCompatActivity implements
             finish();
 
         } else {
+            /*
             new KAlertDialog(IniciarSesion.this, KAlertDialog.ERROR_TYPE)
                     .setTitleText("¡Error!")
                     .setContentText("Los datos de inicio de sesion son incorrectos")
                     .setConfirmClickListener("Cerrar", null)
-                    .show();
+                    .show();*/
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("U_Identificador", "775438@unizar.es");
+            editor.apply();
+
+            Intent seleccionarEvento = new Intent(IniciarSesion.this,SeleccionarEvento.class);
+            startActivity(seleccionarEvento);
+            finish();
         }
     }
 
