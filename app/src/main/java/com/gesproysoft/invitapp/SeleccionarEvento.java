@@ -66,6 +66,7 @@ public class SeleccionarEvento extends AppCompatActivity {
                 // Guarda la representación JSON en SharedPreferences
                 editor.putString("E_ListaInvitados", jsonListaInvitados);
                 editor.putString("E_NombreEvento", nombreEvento.get(position));
+                editor.putString("E_IdEvento", idEvento.get(position));
 
                 editor.apply();
 
@@ -107,14 +108,15 @@ public class SeleccionarEvento extends AppCompatActivity {
         Funciones_FireBase db = new Funciones_FireBase();
 
         Boolean exitosa;
-        //exitosa = db.infoEventosOrganizador(U_Identificador,datos);
-        exitosa = db.infoEventos(datos);
+        exitosa = db.infoEventosOrganizador(U_Identificador,datos);
+        //exitosa = db.infoEventos(datos);
 
         if(exitosa){
             for(DocumentSnapshot d: datos){
                 System.out.println(d.getData());
                 Map<String, Object> data = d.getData();
                 if (data != null) {
+                    String idevento = (String) d.getId();
                     String fecha = (String) data.get("fecha");
                     String ubicacion = (String) data.get("ubicacion");
                     String hora = (String) data.get("hora");
@@ -122,6 +124,7 @@ public class SeleccionarEvento extends AppCompatActivity {
                     String nombre = (String) data.get("nombre");
 
                     invitadosEvento.add(invitados);
+                    idEvento.add(idevento);
                     fechaEvento.add(fecha);
                     lugarEvento.add(ubicacion);
                     nombreEvento.add(nombre);

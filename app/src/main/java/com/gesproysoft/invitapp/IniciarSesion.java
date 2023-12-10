@@ -150,12 +150,22 @@ public class IniciarSesion extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
+
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("U_Identificador", account.getEmail());
+            editor.apply();
+
             Intent seleccionarEvento = new Intent(IniciarSesion.this,SeleccionarEvento.class);
             startActivity(seleccionarEvento);
             finish();
-            // Aquí puedes obtener información del usuario como el nombre, correo electrónico, etc.
+
         } else {
-            // El inicio de sesión ha fallado, maneja el error aquí.
+            new KAlertDialog(IniciarSesion.this, KAlertDialog.ERROR_TYPE)
+                    .setTitleText("¡Error!")
+                    .setContentText("Los datos de inicio de sesion son incorrectos")
+                    .setConfirmClickListener("Cerrar", null)
+                    .show();
         }
     }
 

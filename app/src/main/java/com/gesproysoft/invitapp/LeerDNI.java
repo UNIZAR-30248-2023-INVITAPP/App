@@ -43,11 +43,14 @@ import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 import com.google.zxing.Result;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
@@ -78,6 +82,8 @@ public class LeerDNI extends AppCompatActivity {
     Boolean puedeLeer = true;
     String url_Get_Info;
     TextView TV_Descripcion_Entrada, TV_Nombre_Asistente, TV_DNI_Asistente, TV_Estado_Entrada;
+
+    List<Map<String, String>> listaInvitados;
 
     private Handler handler,handler2;
     private Runnable runnable;
@@ -130,6 +136,17 @@ public class LeerDNI extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
         eNombre = sharedPreferences.getString("E_NombreEvento", ""); // Recupera el valor almacenado en "U_Nombre"
         eId = sharedPreferences.getString("E_IdEvento", "");
+        // Recupera la representación JSON de la lista de invitados
+        String jsonListaInvitados = sharedPreferences.getString("E_ListaInvitados", null);
+
+        if (jsonListaInvitados != null) {
+            // Convierte el JSON nuevamente a la lista de invitados
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Map<String, String>>>() {}.getType();
+            listaInvitados = gson.fromJson(jsonListaInvitados, type);
+
+            // Ahora tienes tu lista de invitados lista para usar en el nuevo Intent
+        }
 
         TV_Nombre_Evento.setText(eNombre);
 
@@ -167,6 +184,38 @@ public class LeerDNI extends AppCompatActivity {
                             Boolean exitosa;
                             List<Boolean> respuesta = new ArrayList<>();
                             exitosa = db.validarInvitacionActualiza(result.getText(), eId, respuesta);
+                            if (exitosa){
+                                TV_Nombre_Evento.setText(eNombre);
+                                TV_Descripcion_Entrada.setText("Entrada de invitación, no incluye consumiciones");
+
+                                String nombre = "";
+                                for (Map<String, String> invitado : listaInvitados) {
+                                    String dni = invitado.get("DNI");
+                                    if (dni.contains(result.getText())){
+
+                                         nombre = invitado.get("nombre");
+
+                                    }
+                                }
+                                
+                                TV_Nombre_Asistente.setText(nombre);
+                                TV_DNI_Asistente.setText(result.getText());
+                                CV_Nombre.setAlpha(1f);
+                                CV_Dni.setAlpha(1f);
+                                TV_Estado_Entrada.setText("Leida");
+                                TV_Estado_Entrada.setBackgroundResource(R.drawable.verde_esquinas_redondas);
+                            }
+                            else{
+                                TV_Nombre_Evento.setText("Error");
+                                TV_Descripcion_Entrada.setText("Error desconocido");
+                                CV_Nombre.setAlpha(0f);
+                                CV_Dni.setAlpha(0f);
+                                TV_Estado_Entrada.setText("Error");
+                                TV_Estado_Entrada.setBackgroundResource(R.drawable.rojo_esquinas_redondas);
+                            }
+                            RL_Cargando.setAlpha(0f);
+                            RL_Informacion.setAlpha(1f);
+                            permitirLeer(2500);
                         }
 
 
