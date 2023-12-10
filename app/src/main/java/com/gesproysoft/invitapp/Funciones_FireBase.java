@@ -351,7 +351,7 @@ public class Funciones_FireBase {
         if(resultado.size() > 0) {//Hay eventos
             Log.d("BOTON_LEER", "Hay eventos con ese organizador");
             for (DocumentSnapshot d : resultado) {
-                Log.d("BOTON_LEER", "Datos de evento: " + d.getData());
+                Log.d("BOTON_LEER", "Datos de evento " + d.getId() + ": " + d.getData());
             }
          } else{
             Log.d("BOTON_LEER", "No hay eventos con ese organizador");
