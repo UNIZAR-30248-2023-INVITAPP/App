@@ -516,4 +516,86 @@ public class Funciones_FireBase {
         return false;
     }
 
+    /*Ejemplo de uso de la funcion infoInvitados*/
+    /*
+    Boolean exitosa;
+    List<DocumentSnapshot> resultado = new ArrayList<>();
+    Funciones_FireBase f_FB = new Funciones_FireBase();
+    exitosa = f_FB.infoInvitados("YybJNIeSZMVaXWK9Yoqo", resultado);
+
+                if(exitosa){
+        if(resultado.size() > 0) {//Hay eventos
+            Log.d("BOTON_LEER", "Hay invitados con ese id_evento");
+            for (DocumentSnapshot d : resultado) {
+                Log.d("BOTON_LEER", "Datos de invitado " + d.getId() + ": " + d.get("nombre") + " "
+                        + d.get("genero") + " " + d.get("email") + " " + d.get("DNI"));
+            }
+        } else{
+            Log.d("BOTON_LEER", "No hay invitados en ese evento");
+        }
+    } else {
+        Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
+    }
+    */
+    /**
+     * Devuelve la información de los invitados del evento identificado por id_evento.
+     * Argumentos:
+     *  id_evento -> pasamos el identificador del evento
+     *  resultado -> guarda los datos de los invitados como un List<DocumentSnapshot>, si esta
+     *               vacio es que no hay eventos
+     * Devuelve:
+     *  true    la lectura de los datos a sido exitosa (incluso si no hay invitados)
+     *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la lectura)
+     * */
+    public boolean infoInvitados(String id_evento, List<DocumentSnapshot> resultado) {
+        String tag = "F_INF_INVITADOS";
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference collectRef = db.collection("Eventos").document(id_evento)
+                .collection("Invitados");
+
+        Task<QuerySnapshot> tarea;
+
+        resultado.clear();//Limpiamos el contenido de salida
+
+        tarea = collectRef.get();//Solicitamos la información de invitados
+
+        //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
+        for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+            //Log.d("F_INF_EVENTO", "Intento " + i + "-esimo");
+            try{
+                Thread.sleep(200);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION","Excepcion: " + e);
+            }
+        }
+
+        if(tarea.isComplete()){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION",e.toString());
+            }
+            if(tarea.isSuccessful()){
+                QuerySnapshot query_docs = tarea.getResult();
+
+                if (query_docs.size() > 0) {//Hay invitados
+                    resultado.addAll(query_docs.getDocuments());//Guardamos los invitados
+                    Log.d(tag, "Hay invitados registrados a ese evento");
+                } else { //No hay invitados
+                    Log.d(tag, "No hay invitados registrados a ese organizador");
+                }
+                return true;//Se ha establecido la comunicacion
+
+            } else {
+                Log.d(tag, "Lectura no exitosa");
+            }
+        } else {
+            Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+        }
+
+        return false;
+    }
 }
