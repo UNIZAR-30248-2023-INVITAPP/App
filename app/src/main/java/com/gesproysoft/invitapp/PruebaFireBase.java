@@ -41,24 +41,21 @@ public class PruebaFireBase extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Boolean exitosa;
-                List<DocumentSnapshot> resultado = new ArrayList<>();
+                List<Integer> respuesta = new ArrayList<>();
                 Funciones_FireBase f_FB = new Funciones_FireBase();
-                exitosa = f_FB.infoInvitados("YybJNIeSZMVaXWK9Yoqo", resultado);
-
-                if(exitosa){
-                    if(resultado.size() > 0) {//Hay eventos
-                        Log.d("BOTON_LEER", "Hay invitados con ese id_evento");
-                        for (DocumentSnapshot d : resultado) {
-                            Log.d("BOTON_LEER", "Datos de invitado " + d.getId() + ": " + d.get("nombre") + " "
-                            + d.get("genero") + " " + d.get("email") + " " + d.get("DNI"));
-                        }
-                    } else{
-                        Log.d("BOTON_LEER", "No hay invitados en ese evento");
+                String DNI = "12345678Z", id_evento = "V61HJQ1ylMzbJddvX0lg";
+                exitosa = f_FB.validarInvitacionAsistido(DNI, id_evento, respuesta);
+                if (exitosa) {//Se ha establecido la consulta con exito
+                    if (respuesta.get(0) == 0) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido a false)");
+                    } else if (respuesta.get(0) == 1) {
+                        Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido a true)");
+                    } else {
+                        Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
                     }
                 } else {
-                    Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
+                    Log.d("BOTON_LEER", "Fallo en la comunicacion con validarInvitacionAsistido");
                 }
-
             }
         });
 
@@ -68,7 +65,8 @@ public class PruebaFireBase extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 //prubasInfoEventos();
-                prubasValidarInvitacionActualiza("23344556Z","hVWftX1RrgJgHuKwjucI");
+                //prubasValidarInvitacionActualiza("23344556Z","hVWftX1RrgJgHuKwjucI");
+                prubasInfoEventosOrganizador("12345678Z");
             }
         });
 
@@ -272,6 +270,29 @@ public class PruebaFireBase extends AppCompatActivity {
             Log.d(log, "¡¡¡TESTS CORRECTOS!!!");
         } else {
             Log.i(log, "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
+    }
+
+    /**
+     * Pruebas sobre la funcion InfoEventosOrganizador:
+     * Ha esta función se le pasa el DNI de un invitado existente
+     * en el evento del id_evento dado
+     */
+    private void prubasInfoEventosOrganizador(String DNI) {
+        String log;
+        int pruebas = 4;//Numero de pruebas
+        int p_correcta = 0;
+        Funciones_FireBase db = new Funciones_FireBase();
+
+        //Paso Previo: añadir evento de prueba
+        Boolean exitosa;
+        log = "P_0_AgnadirEvento";
+        exitosa = db.agnadirEvento("Prueba_InfoEventoOrg", "2024-12-01", "00:30", "Centro Prueba");
+        if(exitosa) {//Se ha establecido la consulta con exito
+            Log.d(log, "CORRECTO---Evento añadido");
+            p_correcta++;
+        } else {
+            Log.d(log, "INCORRECTO---Evento no añadido");
         }
     }
 

@@ -598,4 +598,284 @@ public class Funciones_FireBase {
 
         return false;
     }
+
+    public boolean infoInvitadosPrue(String id_evento, List<DocumentSnapshot> resultado) {
+        return false;
+    }
+
+    /**
+     * Añade un invitado al evento id_evento.
+     * Argumentos:
+     *  id_evento -> pasamos el identificador del evento
+     *  ... campos de invitado
+     * Devuelve:
+     *  true    la escritura de los datos a sido exitosa
+     *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la escritura)
+     * */
+    public boolean agnadirInvitado(String id_evento, String DNI, String email, String genero, String nombre) {
+        String tag = "F_AGNADIR_INVT";
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Task<DocumentReference> tarea;
+
+        Map<String, Object> invitado = new HashMap<>();
+        invitado.put("nombre", nombre);
+        invitado.put("DNI", DNI);
+        invitado.put("genero", genero);
+        invitado.put("email", email);
+        invitado.put("asistido", false);
+
+        CollectionReference collectRef = db.collection("Eventos").document(id_evento).collection("Invitados");
+
+        tarea = collectRef.add(invitado);
+
+        //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
+        for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+            //Log.d("F_INF_EVENTO", "Intento " + i + "-esimo");
+            try{
+                Thread.sleep(200);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION","Excepcion: " + e);
+            }
+        }
+
+        if(tarea.isComplete()){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION",e.toString());
+            }
+            if(tarea.isSuccessful()){
+                DocumentReference doc = tarea.getResult();
+
+                Log.d(tag, "Invitado " + doc.getId() + " añadido");
+                return true;//Se ha establecido la comunicacion
+
+            } else {
+                Log.d(tag, "Invitado no añadido");
+            }
+        } else {
+            Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+        }
+
+        return false;
+    }
+
+    /**
+     * Añade un evento
+     * Argumentos:
+     *  ... campos de evento
+     * Devuelve:
+     *  true    la escritura de los datos a sido exitosa (se añade evento)
+     *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la escritura)
+     * */
+    public boolean agnadirEvento(String nombre, String fecha, String hora, String ubicacion) {
+        String tag = "F_AGNADIR_EVENT";
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Task<DocumentReference> tarea;
+
+        Map<String, Object> evento = new HashMap<>();
+        evento.put("nombre", nombre);
+        evento.put("hora", hora);
+        evento.put("fecha", fecha);
+        evento.put("ubicacion", ubicacion);
+
+        CollectionReference collectRef = db.collection("Eventos");
+
+        tarea = collectRef.add(evento);
+
+        //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
+        for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+            //Log.d("F_INF_EVENTO", "Intento " + i + "-esimo");
+            try{
+                Thread.sleep(200);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION","Excepcion: " + e);
+            }
+        }
+
+        if(tarea.isComplete()){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION",e.toString());
+            }
+            if(tarea.isSuccessful()){
+                DocumentReference doc = tarea.getResult();
+
+                Log.d(tag, "Evento " + doc.getId() + " añadido");
+                return true;//Se ha establecido la comunicacion
+
+            } else {
+                Log.d(tag, "Evento no añadido");
+            }
+        } else {
+            Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+        }
+
+        return false;
+    }
+
+    /*
+        Boolean exitosa;
+        List<Integer> respuesta = new ArrayList<>();
+        Funciones_FireBase f_FB = new Funciones_FireBase();
+        String DNI = "12345678Z", id_evento = "V61HJQ1ylMzbJddvX0lg";
+        exitosa = f_FB.validarInvitacionAsistido(DNI, id_evento, respuesta);
+                    if (exitosa) {//Se ha establecido la consulta con exito
+            if (respuesta.get(0) == 0) {
+                Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido a false)");
+            } else if (respuesta.get(0) == 1) {
+                Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido a true)");
+            } else {
+                Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + DNI + " en la tabla de Invitados");
+            }
+        } else {
+            Log.d("BOTON_LEER", "Fallo en la comunicacion con validarInvitacionAsistido");
+        }
+    */
+    /**
+     * Comprueba que el invitado con ese DNI se encuentre invitado y no está registrado con campo
+     * "asistido" a true
+     * Argumentos:
+     *  DNI       -> dni del invitado a comprobar si ha asistido
+     *  id_evento -> pasamos el identificador del evento donde comprobar si esta invitado
+     *  resultado -> guarda un List<Boolean> que contiene en su posicion 0, true o false
+     *              0   esta en la lista con "asistido" a false
+     *              1   el invitado existe y "asistido" esta a true
+     *              2   no esta en la lista de invitados
+     * Devuelve:
+     *  true    la lectura de los datos a sido exitosa (aunque no haya contenido)
+     *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la lectura)
+     * */
+    public boolean validarInvitacionAsistido(String DNI, String id_evento, List<Integer> resultado) {
+        String tag = "F_VALIDAR_INV_ASIS";
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference collectRef = db.collection("Eventos").document(id_evento)
+                .collection("Invitados");
+
+        Task<QuerySnapshot> tarea;
+
+        resultado.clear();//Limpiamos el contenido de la lista
+
+        tarea = collectRef.whereEqualTo("DNI", DNI).get();
+
+        //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
+        for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+            //Log.d("F_INF_EVENTO", "Intento " + i + "-esimo");
+            try{
+                Thread.sleep(200);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION","Excepcion: " + e);
+            }
+        }
+
+        if(tarea.isComplete()){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION",e.toString());
+            }
+            if(tarea.isSuccessful()){
+                QuerySnapshot query_docs = tarea.getResult();
+                if (query_docs.size() > 0) {
+                    DocumentSnapshot doc = query_docs.getDocuments().get(0);//Obtenemos el invitado que coincide
+
+                    if(!(Boolean)doc.get("asistido")) {//No esta registrada la asistencia
+                        resultado.add(0);//Esta invitado y no registrado
+                        Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");
+                    } else {//Y a se ha registrado la asistencia
+                        resultado.add(1);//Esta invitado y registrado
+                        Log.d(tag, "Hay invitado con ese DNI pero ya se ha registrado la asistencia");
+                    }
+
+                } else {
+                    resultado.add(2);
+                    Log.d(tag, "No hay invitados con ese DNI");
+                }
+                return true;//Se ha establecido la comunicacion
+            } else {
+                Log.d(tag, "Lectura no exitosa");
+            }
+        } else {
+            Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+        }
+        return false;
+    }
+
+    /*
+        Boolean exitosa;
+        Funciones_FireBase f_FB = new Funciones_FireBase();
+        exitosa = f_FB.DesvalidarInvitacionAsistido("hjT9a4zCqU3DoOkGvmVU", "V61HJQ1ylMzbJddvX0lg" );
+
+        if(exitosa){
+            Log.d("BOTON_LEER", "Tarea completada, asistido a false y borrada la hora de asistencia");
+        } else {
+            Log.d("BOTON_LEER", "Fallo en la comunicacion con DesvalidarInvitacionAsistido");
+        }
+    */
+    /**
+     * Pone el campo asistido a false, por lo que ya no estará registrada la asistencia y borramos
+     * el campo hora_asistido
+     * Argumentos:
+     *  id_invitado -> pasamos el identificador del invitado
+     *  id_evento   -> pasamos el identificador del evento donde comprobar si esta invitado
+     * Devuelve:
+     *  true    la desvalidacion ha sido exitosa(asistido a false y borrar hora_asistido)
+     *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la actualizacion)
+     * */
+    public boolean DesvalidarInvitacionAsistido(String id_invitado, String id_evento) {
+        String tag = "F_DESVALIDAR_INV_ASIS";
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = db.collection("Eventos").document(id_evento)
+                .collection("Invitados").document(id_invitado);
+
+        Task<Void> tarea;
+
+        tarea = docRef.update(
+                "asistido", false,
+                "hora_asistido", FieldValue.delete()
+        );//Actualizamos el campo "asistido" a false del invitado y borramos hora de aistencia
+
+
+
+        //Comprobamos cada 0.20 segundos si ha terminado la tarea (maximo 3 segundos)
+        for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+            try{
+                Thread.sleep(200);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION","Excepcion: " + e);
+            }
+        }
+
+        if(tarea.isComplete()){
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Log.d("EXCEPCION",e.toString());
+            }
+            if(tarea.isSuccessful()){
+                Log.d(tag, "Tarea completada, asistido a false y borrada la hora de asistencia");
+
+                return true;//Se ha establecido la comunicacion
+            } else {
+                Log.d(tag, "Tarea completada, no existe ese invitado o evento");
+            }
+        } else {
+            Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+        }
+        return false;
+    }
+
 }
