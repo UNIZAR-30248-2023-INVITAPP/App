@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class MostrarAsistentes extends AppCompatActivity {
     TextView TV_Atras,TV_Nombre_Evento_Cabecera;
-    String eNombre;
+    String eNombre, eId;
 
     TextView TV_Ningun_Asistente;
     SwipeRefreshLayout refrescar_LV_Asistentes;
@@ -71,6 +71,7 @@ public class MostrarAsistentes extends AppCompatActivity {
         // Recupera la representación JSON de la lista de invitados
         String jsonListaInvitados = sharedPreferences.getString("E_ListaInvitados", null);
         eNombre = sharedPreferences.getString("E_NombreEvento", ""); // Recupera el valor almacenado en "U_Nombre"
+        eId = sharedPreferences.getString("E_IdEvento", "");
         System.out.println("NOMBRE OBTENIDO "+eNombre);
 
 
@@ -163,17 +164,35 @@ public class MostrarAsistentes extends AppCompatActivity {
             // Obtén el nombre del invitado
             String nombre = invitado.get("nombre");
             if (nombre.contains(buscar)){
-                nombreAsistente.add(nombre);
+
 
                 // Obtén el DNI del invitado
                 String dni = invitado.get("DNI");
                 dniAsistente.add(dni);
 
                 // Obtén el email del invitado
-                String email = invitado.get("email");
+                String genero = invitado.get("genero");
+                nombreAsistente.add(genero);
 
-                estaLeida.add("no");
-                nombreEntrada.add(eNombre);
+                /*Funciones_FireBase db = new Funciones_FireBase();
+                Boolean exitosa;
+                List<Integer> respuesta = new ArrayList<>();
+                exitosa = db.validarInvitacionActualizaReg(dni, eId, respuesta);
+                if (exitosa) {
+
+                    if (respuesta.get(0) == 1) {
+                        estaLeida.add("si");
+                    }
+                    else{
+                        estaLeida.add("no");
+                    }
+                }
+                else{
+                    estaLeida.add("no");
+                }*/
+
+
+                nombreEntrada.add(nombre);
                 horaLectura.add(" ");
                 leidaPor.add("Prueba");
                 descripcionEntrada.add("Entrada de invitación, no incluye consumiciones");

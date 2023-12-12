@@ -70,6 +70,7 @@ public class asistentesAdaptador extends ArrayAdapter<String> {
         TextView descripcion_entrada= (TextView) rowView.findViewById(R.id.TV_Descripcion_Entrada);
         TextView nombre_asistente = (TextView) rowView.findViewById(R.id.TV_Nombre_Asistente);
         TextView dni_asistente = (TextView) rowView.findViewById(R.id.TV_DNI_Asistente);
+        TextView genero_asistente = (TextView) rowView.findViewById(R.id.TV_GENERO);
         TextView estado_entrada = (TextView) rowView.findViewById(R.id.TV_Estado_Entrada);
         RelativeLayout general = (RelativeLayout) rowView.findViewById(R.id.RL_Informacion);
         LabeledSwitch toogleLeer = (LabeledSwitch) rowView.findViewById(R.id.Toggle_Leer);
@@ -98,25 +99,20 @@ public class asistentesAdaptador extends ArrayAdapter<String> {
         nombre_entrada.setText(nombreEntrada.get(position));
         nombre_asistente.setText(nombre);
         dni_asistente.setText(dniAsistente.get(position));
+        if (nombre.contains("Masculino")){
+            genero_asistente.setText("♂");
+        }
+        else if (nombre.contains("Femenino")){
+            genero_asistente.setText("♀");
+        }
 
         if (estaLeida.get(position).matches("si")){
             estado_entrada.setText("Leida");
             estado_entrada.setBackgroundResource(R.drawable.verde_esquinas_redondas);
             toogleLeer.setOn(true);
 
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            String fechaString = horaLectura.get(position);
-            Date fecha = null;
-            try {
-                fecha = dateFormatter.parse(fechaString);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
 
-            dateFormatter = new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy 'a las' HH:mm:ss", new Locale("es", "ES"));
-            String fechaFormateada = dateFormatter.format(fecha);
-
-            descripcion_entrada.setText("Leida el " + fechaFormateada + " por " + leidaPor.get(position));
+            descripcion_entrada.setText("Esta entrada ya ha sido leida anteriormente por un lector de InvitApp");
         }
         else{
             estado_entrada.setText("No\nLeida");

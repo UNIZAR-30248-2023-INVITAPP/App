@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,22 @@ public class SeleccionarEvento extends AppCompatActivity {
                     String fecha = (String) data.get("fecha");
                     String ubicacion = (String) data.get("ubicacion");
                     String hora = (String) data.get("hora");
-                    List<Map<String, String>> invitados = (List<Map<String, String>>) data.get("invitados");
+
+                    List<DocumentSnapshot> resultado = new ArrayList<>();
+                    db.infoInvitados(idevento , resultado);
+                    List<Map<String, String>> invitados = new ArrayList<>();
+
+                    for (DocumentSnapshot documento : resultado) {
+                        Map<String, String> mapa = new HashMap<>();
+
+                        mapa.put("id", documento.getId());
+                        mapa.put("nombre", (String) documento.get("nombre"));
+                        mapa.put("genero", (String) documento.get("genero"));
+                        mapa.put("email", (String) documento.get("email"));
+                        mapa.put("DNI", (String) documento.get("DNI"));
+
+                        invitados.add(mapa);
+                    }
                     String nombre = (String) data.get("nombre");
 
                     invitadosEvento.add(invitados);
