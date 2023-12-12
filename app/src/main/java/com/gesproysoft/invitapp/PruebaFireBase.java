@@ -66,7 +66,11 @@ public class PruebaFireBase extends AppCompatActivity {
             public void onClick(View view){
                 //prubasInfoEventos();
                 //prubasValidarInvitacionActualiza("23344556Z","hVWftX1RrgJgHuKwjucI");
-                prubasInfoEventosOrganizador("12345678Z");
+
+                //Pruebas de funciones usadas en código
+                //prubasInfoEventosOrganizador();
+                //prubasValidarInvitacionActualizaReg();
+                prubasInfoIvitados();
             }
         });
 
@@ -275,25 +279,364 @@ public class PruebaFireBase extends AppCompatActivity {
 
     /**
      * Pruebas sobre la funcion InfoEventosOrganizador:
-     * Ha esta función se le pasa el DNI de un invitado existente
-     * en el evento del id_evento dado
+     * En la función ya se crea el evento que se usa para validar, para
+     * ver los resultados de forma facil ir a vista "LogCat" y buscar
+     * por el nombre del log de la prueba "P_infoEvenOrg"
      */
-    private void prubasInfoEventosOrganizador(String DNI) {
-        String log;
+    private void prubasInfoEventosOrganizador() {
+        String log = "P_infoEvenOrg";
         int pruebas = 4;//Numero de pruebas
-        int p_correcta = 0;
+        int p_correcta = 0;//Pruebas correctas
         Funciones_FireBase db = new Funciones_FireBase();
 
         //Paso Previo: añadir evento de prueba
         Boolean exitosa;
-        log = "P_0_AgnadirEvento";
-        exitosa = db.agnadirEvento("Prueba_InfoEventoOrg", "2024-12-01", "00:30", "Centro Prueba");
+        String organizador = "prueba@gmail.com";
+        String nombre = "Prueba_InfoEventoOrg";
+        String fecha = "2024-12-01";
+        String hora = "00:00", ubicacion = "Centro Prueba";
+        String id_evento;
+        List<String> res = new ArrayList<>();
+        exitosa = db.agnadirEvento(nombre, fecha, hora,
+                ubicacion, organizador, res);
         if(exitosa) {//Se ha establecido la consulta con exito
-            Log.d(log, "CORRECTO---Evento añadido");
-            p_correcta++;
+            id_evento = res.get(0);
+            Log.d(log + "-0", "CORRECTO---Evento añadido");
         } else {
             Log.d(log, "INCORRECTO---Evento no añadido");
         }
+
+        //Prueba 1: Se ha podido establecer la conexion con la coleccion de Eventos
+        Log.d(log + "-1", "Prueba de conexion con coleccion de invitados");
+
+        List<DocumentSnapshot> respuesta = new ArrayList<>();
+        exitosa = db.infoEventosOrganizador(organizador, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            Log.d(log + "-1", "CORRECTO---Conexion establecida");
+            p_correcta++;
+        } else {
+            Log.d(log + "-1", "INCORRECTO---Fallo en la comunicacion con infoEventosOrganizador");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 2: El correo pertenece a un organizador que tiene eventos creados
+        Log.d(log + "-2", "Prueba de validacion de que el organizador tiene eventos");
+
+        exitosa = db.infoEventosOrganizador(organizador, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.size() > 0){
+                Log.d(log + "-2", "CORRECTO---Hay eventos creados por ese organizador");
+                p_correcta++;
+
+            } else {
+                Log.d(log + "-2", "INCORRECTO---No hay eventos creados por ese organizador");
+            }
+
+        } else {
+            Log.d(log + "-2", "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 3: El correo pertenece a un organizador que no tiene eventos creados
+        Log.d(log + "-3", "Prueba de validacion de que el no hay eventos de ese organizador");
+
+        exitosa = db.infoEventosOrganizador("", respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.size() > 0){
+                Log.d(log + "-3", "INCORRECTO---Hay eventos creados por ese organizador");
+
+            } else {
+                Log.d(log + "-3", "CORRECTO---No hay eventos creados por ese organizador");
+                p_correcta++;
+            }
+
+        } else {
+            Log.d(log, "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 4: La función devuvelve los valores del evento "Prueba_InfoEventoOrg"
+        Log.d(log + "-4", "Prueba de comprobación de valores correctos");
+
+        exitosa = db.infoEventosOrganizador(organizador, respuesta);
+        Boolean encotrado = false;
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.size() > 0){
+                for(int i = 0; i<respuesta.size(); i++){
+                    if(respuesta.get(i).get("nombre").toString().equals(nombre) &&
+                            respuesta.get(i).get("fecha").toString().equals(fecha) &&
+                            respuesta.get(i).get("hora").toString().equals(hora) &&
+                            respuesta.get(i).get("ubicacion").toString().equals(ubicacion)) {
+
+                        Log.d(log + "-4", "CORRECTO---Valores del evento devueltos correctamente");
+                        encotrado = true;
+                        p_correcta++;
+                        break;
+                    }
+                }
+                if(!encotrado){
+                    Log.d(log + "-4", "INCORRECTO---Valores del evento no encontrados");
+                }
+            } else {
+                Log.d(log + "-4", "INCORRECTO---No hay eventos creados por ese organizador");
+            }
+        } else {
+            Log.d(log + "-4", "INCORRECTO---Fallo en la comunicacion con valInvActualizada");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Verificacion de que pasa todas las pruebas
+        if (p_correcta == pruebas) {
+            Log.d(log + "-RESULTADO", "¡¡¡TESTS CORRECTOS!!!");
+        } else {
+            Log.i(log + "-RESULTADO", "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
     }
 
+    /**
+     * Pruebas sobre la funcion ValidarInvitacionActualizaReg:
+     * En la función ya se crea el evento e invitado que se usan para validar, para
+     * ver los resultados de forma facil ir a vista "LogCat" y buscar
+     * por el nombre del log de la prueba "P_valInvActReg"
+     */
+    private void prubasValidarInvitacionActualizaReg() {
+        String log = "P_valInvActReg";
+        int pruebas = 4;//Numero de pruebas
+        int p_correcta = 0;//Pruebas correctas
+        Funciones_FireBase db = new Funciones_FireBase();
+
+        //Paso Previo: añadir evento de prueba
+        Boolean exitosa;
+        String organizador = "prueba@gmail.com";
+        String nombre = "Prueba_ValInvActReg";
+        String fecha = "2024-12-01";
+        String hora = "00:00", ubicacion = "Centro Prueba";
+        String id_evento = "";
+        List<String> res = new ArrayList<>();
+
+        exitosa = db.agnadirEvento(nombre, fecha, hora,
+                ubicacion, organizador, res);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            id_evento = res.get(0);
+            Log.d(log + "-01", "CORRECTO---Evento añadido");
+        } else {
+            Log.d(log + "-01", "INCORRECTO---Evento no añadido");
+        }
+
+        //Paso Previo: añadir invitado de prueba
+        String DNI = "12345678Z";
+        String email = "inprub@gmail.com";
+        String nom_inv = "Pedro";
+        String genero = "Masculino";
+        String id_invitado = "";
+
+        exitosa = db.agnadirInvitado(id_evento, DNI, email,
+                genero, nom_inv, res);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            id_invitado = res.get(0);
+            Log.d(log + "-02", "CORRECTO---Invitado añadido");
+        } else {
+            Log.d(log + "-02", "INCORRECTO---Invitado no añadido");
+        }
+
+        //Prueba 1: Se ha podido establecer la conexion con la coleccion de Invitados
+        Log.d(log + "-1", "Prueba de conexion con coleccion de Invitados");
+
+        List<Integer> respuesta = new ArrayList<>();
+        exitosa = db.validarInvitacionActualizaReg("32", id_evento, respuesta);
+
+        if(exitosa) {//Se ha establecido la consulta con exito
+            Log.d(log + "-1", "CORRECTO---Conexion establecida");
+            p_correcta++;
+        } else {
+            Log.d(log + "-1", "INCORRECTO---Fallo en la comunicacion con validarInvitacionActualizaReg");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 2: El DNI pertenece a un invitado sin registrar asistencia y la registramos
+        Log.d(log + "-2", "Prueba de que no esta registrada la asistencia y la registramos");
+
+        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0) == 0) {
+                Log.d(log + "-2", "CORRECTO---Asistencia de invitado sin registrar y se registra");
+                p_correcta++;
+            } else if(respuesta.get(0) == 1){
+                Log.d(log + "-2", "INCORRECTO---Asistencia de invitado registrada");
+            } else {
+                Log.d(log + "-2", "INCORRECTO---No hay invitados con ese DNI");
+            }
+
+        } else {
+            Log.d(log + "-2", "INCORRECTO---Fallo en la comunicacion con validarInvitacionActualizaReg");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 3: El DNI pertenece a un invitado registrado
+        Log.d(log + "-3", "Prueba de que esta registrada la asistencia");
+
+        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0) == 0) {
+                Log.d(log + "-3", "INCORRECTO---Asistencia de invitado sin registrar y se registra");
+            } else if(respuesta.get(0) == 1){
+                Log.d(log + "-3", "CORRECTO---Asistencia de invitado registrada");
+                p_correcta++;
+            } else {
+                Log.d(log + "-3", "INCORRECTO---No hay invitados con ese DNI");
+            }
+        } else {
+            Log.d(log + "-3", "INCORRECTO---Fallo en la comunicacion con validarInvitacionActualizaReg");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 4: El DNI no pertenece a un invitado del evento
+        Log.d(log + "-4", "Prueba de que no existe el invitado con DNI \"32\"");
+
+        exitosa = db.validarInvitacionActualizaReg("32", id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.get(0) == 0) {
+                Log.d(log + "-4", "INCORRECTO---Asistencia de invitado sin registrar y se registra");
+            } else if(respuesta.get(0) == 1){
+                Log.d(log + "-4", "INCORRECTO---Asistencia de invitado registrada");
+            } else {
+                Log.d(log + "-4", "CORRECTO---No hay invitados con ese DNI");
+                p_correcta++;
+            }
+        } else {
+            Log.d(log + "-4", "INCORRECTO---Fallo en la comunicacion con validarInvitacionActualizaReg");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Verificacion de que pasa todas las pruebas
+        if (p_correcta == pruebas) {
+            Log.d(log + "-RESULTADO", "¡¡¡TESTS CORRECTOS!!!");
+        } else {
+            Log.i(log + "-RESULTADO", "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
+    }
+
+    /**
+     * Pruebas sobre la funcion InfoIvitados:
+     * En la función ya se crea el evento e invitado que se usan para validar, para
+     * ver los resultados de forma facil ir a vista "LogCat" y buscar
+     * por el nombre del log de la prueba "P_infoIvitados"
+     */
+    private void prubasInfoIvitados() {
+        String log = "P_infoIvitados";
+        int pruebas = 3;//Numero de pruebas
+        int p_correcta = 0;//Pruebas correctas
+        Funciones_FireBase db = new Funciones_FireBase();
+
+        //Paso Previo: añadir evento de prueba
+        Boolean exitosa;
+        String organizador = "prueba@gmail.com";
+        String nombre = "Prueba_InfoInv";
+        String fecha = "2024-12-01";
+        String hora = "00:00", ubicacion = "Centro Prueba";
+        String id_evento = "";
+        List<String> res = new ArrayList<>();
+
+        exitosa = db.agnadirEvento(nombre, fecha, hora,
+                ubicacion, organizador, res);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            id_evento = res.get(0);
+            Log.d(log + "-01", "CORRECTO---Evento añadido");
+        } else {
+            Log.d(log + "-01", "INCORRECTO---Evento no añadido");
+        }
+
+        //Paso Previo: añadir invitado de prueba
+        String DNI = "12345678Z";
+        String email = "inprub@gmail.com";
+        String nom_inv = "Pedro";
+        String genero = "Masculino";
+        String id_invitado = "";
+
+        exitosa = db.agnadirInvitado(id_evento, DNI, email,
+                genero, nom_inv, res);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            id_invitado = res.get(0);
+            Log.d(log + "-02", "CORRECTO---Invitado añadido");
+        } else {
+            Log.d(log + "-02", "INCORRECTO---Invitado no añadido");
+        }
+
+        //Prueba 1: Se ha podido establecer la conexion con la coleccion de Invitados
+        Log.d(log + "-1", "Prueba de conexion con coleccion de Invitados");
+
+        List<DocumentSnapshot> respuesta = new ArrayList<>();
+        exitosa = db.infoInvitados(id_evento, respuesta);
+
+        if(exitosa) {//Se ha establecido la consulta con exito
+            Log.d(log + "-1", "CORRECTO---Conexion establecida");
+            p_correcta++;
+        } else {
+            Log.d(log + "-1", "INCORRECTO---Fallo en la comunicacion con infoInvitados");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 2: Prueba de que hay invitados en el evento
+        Log.d(log + "-2", "Prueba de que hay invitados en el evento");
+
+        exitosa = db.infoInvitados(id_evento, respuesta);
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.size() > 0) {
+                Log.d(log + "-2", "CORRECTO---Hay invitados en el evento");
+                p_correcta++;
+            } else {
+                Log.d(log + "-2", "INCORRECTO---No hay invitados en el evento");
+            }
+
+        } else {
+            Log.d(log + "-2", "INCORRECTO---Fallo en la comunicacion con infoInvitados");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Prueba 3: Prueba que esta el invitado con DNI 12345678Z
+        Log.d(log + "-3", "Prueba de que hay invitado con DNI 12345678Z");
+
+        Boolean encontrado = false;
+
+        exitosa = db.infoInvitados(id_evento, respuesta);
+
+        if(exitosa) {//Se ha establecido la consulta con exito
+            if(respuesta.size() > 0) {
+                for(int i = 0; i < respuesta.size(); i++){
+                    if(respuesta.get(i).get("DNI").toString().equals(DNI)){
+                        encontrado = true;
+                        Log.d(log + "-3", "CORRECTO---Hay invitado con DNI 12345678Z");
+                        p_correcta++;
+                    }
+                }
+                if(!encontrado){
+                    Log.d(log + "-3", "INCORRECTO---No hay invitado con DNI 12345678Z");
+                }
+            } else {
+                Log.d(log + "-3", "INCORRECTO---No hay invitados en el evento");
+            }
+
+        } else {
+            Log.d(log + "-3", "INCORRECTO---Fallo en la comunicacion con infoInvitados");
+        }
+
+        Log.d(log, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        //Verificacion de que pasa todas las pruebas
+        if (p_correcta == pruebas) {
+            Log.d(log + "-RESULTADO", "¡¡¡TESTS CORRECTOS!!!");
+        } else {
+            Log.i(log + "-RESULTADO", "¡¡¡FALLO EN LAS PRUEBAS!!!");
+        }
+    }
 }

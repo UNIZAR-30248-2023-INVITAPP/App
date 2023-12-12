@@ -458,7 +458,7 @@ public class Funciones_FireBase {
      * Devuelve la información de los eventos que tiene acceso el organizador identificado
      * por el parametro id_organizador.
      * Argumentos:
-     *  id_organizador -> pasamos el identificador del organizador
+     *  id_organizador -> el correo electronico del organizador
      *  resultado -> guarda los datos de los eventos como un List<DocumentSnapshot>, si esta
      *               vacio es que no hay eventos
      * Devuelve:
@@ -608,15 +608,19 @@ public class Funciones_FireBase {
      * Argumentos:
      *  id_evento -> pasamos el identificador del evento
      *  ... campos de invitado
+     *  res -> lista con id del invitado en primera posicion de la lista
      * Devuelve:
      *  true    la escritura de los datos a sido exitosa
      *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la escritura)
      * */
-    public boolean agnadirInvitado(String id_evento, String DNI, String email, String genero, String nombre) {
+    public boolean agnadirInvitado(String id_evento, String DNI, String email, String genero, String nombre,
+                                   List<String> res) {
         String tag = "F_AGNADIR_INVT";
 
         // Access a Cloud Firestore instance from your Activity
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        res.clear();//Limpiamos el contenido de salida
 
         Task<DocumentReference> tarea;
 
@@ -649,7 +653,7 @@ public class Funciones_FireBase {
             }
             if(tarea.isSuccessful()){
                 DocumentReference doc = tarea.getResult();
-
+                res.add(doc.getId());
                 Log.d(tag, "Invitado " + doc.getId() + " añadido");
                 return true;//Se ha establecido la comunicacion
 
@@ -667,15 +671,19 @@ public class Funciones_FireBase {
      * Añade un evento
      * Argumentos:
      *  ... campos de evento
+     *  res -> lista con id del evento en primera posicion de la lista
      * Devuelve:
      *  true    la escritura de los datos a sido exitosa (se añade evento)
      *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la escritura)
      * */
-    public boolean agnadirEvento(String nombre, String fecha, String hora, String ubicacion) {
+    public boolean agnadirEvento(String nombre, String fecha, String hora, String ubicacion, String organizador,
+                                 List<String> res) {
         String tag = "F_AGNADIR_EVENT";
 
         // Access a Cloud Firestore instance from your Activity
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        res.clear();//Limpiamos el contenido de salida
 
         Task<DocumentReference> tarea;
 
@@ -684,6 +692,7 @@ public class Funciones_FireBase {
         evento.put("hora", hora);
         evento.put("fecha", fecha);
         evento.put("ubicacion", ubicacion);
+        evento.put("organizador", organizador);
 
         CollectionReference collectRef = db.collection("Eventos");
 
@@ -707,7 +716,7 @@ public class Funciones_FireBase {
             }
             if(tarea.isSuccessful()){
                 DocumentReference doc = tarea.getResult();
-
+                res.add(doc.getId());//Guardamos id
                 Log.d(tag, "Evento " + doc.getId() + " añadido");
                 return true;//Se ha establecido la comunicacion
 
