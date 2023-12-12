@@ -174,7 +174,7 @@ public class MostrarAsistentes extends AppCompatActivity {
                 String genero = invitado.get("genero");
                 nombreAsistente.add(genero);
 
-                /*Funciones_FireBase db = new Funciones_FireBase();
+                Funciones_FireBase db = new Funciones_FireBase();
                 Boolean exitosa;
                 List<Integer> respuesta = new ArrayList<>();
                 exitosa = db.validarInvitacionActualizaReg(dni, eId, respuesta);
@@ -189,7 +189,7 @@ public class MostrarAsistentes extends AppCompatActivity {
                 }
                 else{
                     estaLeida.add("no");
-                }*/
+                }
 
 
                 nombreEntrada.add(nombre);
