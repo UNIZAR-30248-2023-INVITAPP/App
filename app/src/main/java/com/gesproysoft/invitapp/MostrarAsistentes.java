@@ -177,7 +177,7 @@ public class MostrarAsistentes extends AppCompatActivity {
                 Funciones_FireBase db = new Funciones_FireBase();
                 Boolean exitosa;
                 List<Integer> respuesta = new ArrayList<>();
-                exitosa = db.validarInvitacionActualizaReg(dni, eId, respuesta);
+                exitosa = db.validarInvitacionAsistido(dni, eId, respuesta);
                 if (exitosa) {
 
                     if (respuesta.get(0) == 1) {
