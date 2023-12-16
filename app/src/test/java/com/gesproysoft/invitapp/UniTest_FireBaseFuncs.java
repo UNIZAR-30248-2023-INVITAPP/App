@@ -23,5 +23,9 @@ public class UniTest_FireBaseFuncs {
 
         assertEquals(false, f_FB.infoEventosOrganizadorPrue("YybJNIeSZMVaXWK9Yoqo", resultado));//34 líneas
 
+        assertEquals(false, f_FB.validarInvitacionAsistidoPrue("12345678Z","YybJNIeSZMVaXWK9Yoqo", res));//42 líneas
+
+        assertEquals(false, f_FB.DesvalidarInvitacionAsistidoPrue("YybJNIeSZMVaXWK9Yoqo","YybJNIeSZMVaXWK9Yoqo"));//27 líneas
+
     }
 }

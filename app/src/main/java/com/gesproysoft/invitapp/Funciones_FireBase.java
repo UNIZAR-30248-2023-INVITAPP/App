@@ -554,6 +554,53 @@ public class Funciones_FireBase {
             Log.d("BOTON_LEER", "Fallo en la comunicacion con validarInvitacionAsistido");
         }
     */
+    public boolean validarInvitacionAsistidoPrue(String DNI, String id_evento, List<Integer> resultado){
+        if (false) {
+            String tag = "F_VALIDAR_INV_ASIS";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collectRef = db.collection("Eventos").document(id_evento).collection("Invitados");
+            Task<QuerySnapshot> tarea;
+            resultado.clear();//Limpiamos el contenido de la lista
+            tarea = collectRef.whereEqualTo("DNI", DNI).get();
+            for(int i = 0; i < 15 && !tarea.isComplete(); i++){
+                //Log.d("F_INF_EVENTO", "Intento " + i + "-esimo");
+                try{
+                    Thread.sleep(200);
+                } catch (InterruptedException e){
+                    Log.d("EXCEPCION","Excepcion: " + e);
+                }
+            }
+            if(tarea.isComplete()){
+                try{
+                    Thread.sleep(1000);
+                } catch (InterruptedException e){
+                    Log.d("EXCEPCION",e.toString());
+                }
+                if(tarea.isSuccessful()){
+                    QuerySnapshot query_docs = tarea.getResult();
+                    if (query_docs.size() > 0) {
+                        DocumentSnapshot doc = query_docs.getDocuments().get(0);//Obtenemos el invitado que coincide
+                        if(!(Boolean)doc.get("asistido")) {//No esta registrada la asistencia
+                            resultado.add(0);//Esta invitado y no registrado
+                            Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");
+                        } else {//Y a se ha registrado la asistencia
+                            resultado.add(1);//Esta invitado y registrado
+                            Log.d(tag, "Hay invitado con ese DNI pero ya se ha registrado la asistencia");
+                        }
+                    } else {
+                        resultado.add(2);
+                        Log.d(tag, "No hay invitados con ese DNI");
+                    }
+                    return true;//Se ha establecido la comunicacion
+                } else {
+                    Log.d(tag, "Lectura no exitosa");
+                }
+            } else {
+                Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+            }
+        }
+        return false;
+    }
     /**
      * Comprueba que el invitado con ese DNI se encuentre invitado y no está registrado con campo
      * "asistido" a true
@@ -637,6 +684,39 @@ public class Funciones_FireBase {
             Log.d("BOTON_LEER", "Fallo en la comunicacion con DesvalidarInvitacionAsistido");
         }
     */
+    public boolean DesvalidarInvitacionAsistidoPrue(String id_invitado, String id_evento) {
+        if(false) {
+            String tag = "F_DESVALIDAR_INV_ASIS";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("Eventos").document(id_evento).collection("Invitados").document(id_invitado);
+            Task<Void> tarea;
+            tarea = docRef.update("asistido", false, "hora_asistido", FieldValue.delete());//Actualizamos el campo "asistido" a false del invitado y borramos hora de aistencia
+            for (int i = 0; i < 15 && !tarea.isComplete(); i++) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", "Excepcion: " + e);
+                }
+            }
+            if (tarea.isComplete()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", e.toString());
+                }
+                if (tarea.isSuccessful()) {
+                    Log.d(tag, "Tarea completada, asistido a false y borrada la hora de asistencia");
+                    return true;//Se ha establecido la comunicacion
+                } else {
+                    Log.d(tag, "Tarea completada, no existe ese invitado o evento");
+                }
+            } else {
+                Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+            }
+        }
+        return false;
+    }
+
     /**
      * Pone el campo asistido a false, por lo que ya no estará registrada la asistencia y borramos
      * el campo hora_asistido
