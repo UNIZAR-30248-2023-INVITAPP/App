@@ -64,12 +64,9 @@ public class PruebaFireBase extends AppCompatActivity {
             // When the button is pressed/clicked, it will run the code below
             @Override
             public void onClick(View view){
-                //prubasInfoEventos();
-                //prubasValidarInvitacionActualiza("23344556Z","hVWftX1RrgJgHuKwjucI");
-
                 //Pruebas de funciones usadas en código
-                //prubasInfoEventosOrganizador();
-                //prubasValidarInvitacionActualizaReg();
+                prubasInfoEventosOrganizador();
+                prubasValidarInvitacionActualizaReg();
                 prubasInfoIvitados();
             }
         });
@@ -284,7 +281,7 @@ public class PruebaFireBase extends AppCompatActivity {
      * por el nombre del log de la prueba "P_infoEvenOrg"
      */
     private void prubasInfoEventosOrganizador() {
-        String log = "P_infoEvenOrg";
+        String log = "PF_infoEvenOrg";
         int pruebas = 4;//Numero de pruebas
         int p_correcta = 0;//Pruebas correctas
         Funciones_FireBase db = new Funciones_FireBase();
@@ -404,7 +401,7 @@ public class PruebaFireBase extends AppCompatActivity {
      * por el nombre del log de la prueba "P_valInvActReg"
      */
     private void prubasValidarInvitacionActualizaReg() {
-        String log = "P_valInvActReg";
+        String log = "PF_valInvActReg";
         int pruebas = 4;//Numero de pruebas
         int p_correcta = 0;//Pruebas correctas
         Funciones_FireBase db = new Funciones_FireBase();
@@ -531,7 +528,7 @@ public class PruebaFireBase extends AppCompatActivity {
      * por el nombre del log de la prueba "P_infoIvitados"
      */
     private void prubasInfoIvitados() {
-        String log = "P_infoIvitados";
+        String log = "PF_infoIvitados";
         int pruebas = 3;//Numero de pruebas
         int p_correcta = 0;//Pruebas correctas
         Funciones_FireBase db = new Funciones_FireBase();

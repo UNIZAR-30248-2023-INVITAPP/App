@@ -271,6 +271,59 @@ public class Funciones_FireBase {
         Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizadaReg");
     }
     */
+    public boolean validarInvitacionActualizaRegPrue(String DNI, String id_evento, List<Integer> resultado) {
+        if(false) {
+            String tag = "F_VALIDAR_INVIT";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collectRef = db.collection("Eventos").document(id_evento).collection("Invitados");
+            Task<QuerySnapshot> tarea;
+            resultado.clear();//Limpiamos el contenido de la lista
+            tarea = collectRef.whereEqualTo("DNI", DNI).get();//Solicitamos la información del evento
+            for (int i = 0; i < 15 && !tarea.isComplete(); i++) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", "Excepcion: " + e);
+                }
+            }
+            if (tarea.isComplete()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", e.toString());
+                }
+                if (tarea.isSuccessful()) {
+                    QuerySnapshot query_docs = tarea.getResult();
+                    if (query_docs.size() > 0) {
+                        DocumentSnapshot doc = query_docs.getDocuments().get(0);//Obtenemos el invitado que coincide
+                        if (!(Boolean) doc.get("asistido")) {//No esta registrada la asistencia
+                            DocumentReference docRef = db.collection("Eventos").document(id_evento)
+                                    .collection("Invitados").document(doc.getId());
+                            docRef.update(
+                                    "asistido", true,
+                                    "hora_asistido", FieldValue.serverTimestamp()
+                            );//Actualizamos el campo "asistido" a true del invitado y su hora de asistencia
+                            resultado.add(0);//Esta invitado
+                            Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");
+                        } else {//Y a se ha registrado la asistencia
+                            resultado.add(1);//Esta invitado
+                            Log.d(tag, "Hay invitado con ese DNI pero ya se ha registrado la asistencia");
+                        }
+                    } else {
+                        resultado.add(2);
+                        Log.d(tag, "No hay invitados con ese DNI");
+                    }
+                    return true;//Se ha establecido la comunicacion
+                } else {
+                    Log.d(tag, "Lectura no exitosa");
+                }
+            } else {
+                Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+            }
+        }
+        return false;
+    }
+
     /**
      * Comprueba que el invitado con ese DNI se encuentre invitado en el evento seleccionado y no se ha registrado ya,
      * además actualiza el campo "asistido" a true y pone el campo "hora_asistiedo" con el timestamp actual
@@ -454,6 +507,47 @@ public class Funciones_FireBase {
         Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
      }
     */
+
+    public boolean infoEventosOrganizadorPrue(String id_organizador, List<DocumentSnapshot> resultado) {
+        if(false) {
+            String tag = "F_INF_EVEN_ORG";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collecRef = db.collection("Eventos");
+            Task<QuerySnapshot> tarea;
+            resultado.clear();//Limpiamos el contenido de salida
+            tarea = collecRef.whereEqualTo("organizador", id_organizador).get();//Solicitamos la información
+            for (int i = 0; i < 15 && !tarea.isComplete(); i++) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", "Excepcion: " + e);
+                }
+            }
+            if (tarea.isComplete()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", e.toString());
+                }
+                if (tarea.isSuccessful()) {
+                    QuerySnapshot query_docs = tarea.getResult();
+                    if (query_docs.size() > 0) {//Hay eventos
+                        resultado.addAll(query_docs.getDocuments());//Guardamos los eventos
+                        Log.d(tag, "Hay eventos registrados a ese organizador");
+                    } else { //No hay eventos
+                        Log.d(tag, "No hay eventos registrados a ese organizador");
+                    }
+                    return true;//Se ha establecido la comunicacion
+                } else {
+                    Log.d(tag, "Lectura no exitosa");
+                }
+            } else {
+                Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+            }
+        }
+        return false;
+    }
+
     /**
      * Devuelve la información de los eventos que tiene acceso el organizador identificado
      * por el parametro id_organizador.
@@ -537,6 +631,47 @@ public class Funciones_FireBase {
         Log.d("BOTON_LEER", "Fallo en la comunicacion con infoEventos");
     }
     */
+    public boolean infoInvitadosPrue(String id_evento, List<DocumentSnapshot> resultado) {
+        if(false) {
+            String tag = "F_INF_INVITADOS";
+            // Access a Cloud Firestore instance from your Activity
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collectRef = db.collection("Eventos").document(id_evento).collection("Invitados");
+            Task<QuerySnapshot> tarea;
+            resultado.clear();//Limpiamos el contenido de salida
+            tarea = collectRef.get();//Solicitamos la información de invitados
+            for (int i = 0; i < 15 && !tarea.isComplete(); i++) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", "Excepcion: " + e);
+                }
+            }
+            if (tarea.isComplete()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.d("EXCEPCION", e.toString());
+                }
+                if (tarea.isSuccessful()) {
+                    QuerySnapshot query_docs = tarea.getResult();
+                    if (query_docs.size() > 0) {//Hay invitados
+                        resultado.addAll(query_docs.getDocuments());//Guardamos los invitados
+                        Log.d(tag, "Hay invitados registrados a ese evento");
+                    } else { //No hay invitados
+                        Log.d(tag, "No hay invitados registrados a ese organizador");
+                    }
+                    return true;//Se ha establecido la comunicacion
+                } else {
+                    Log.d(tag, "Lectura no exitosa");
+                }
+            } else {
+                Log.d(tag, "Tarea no completada (a expìrado el timeout)");
+            }
+        }
+        return false;
+    }
+
     /**
      * Devuelve la información de los invitados del evento identificado por id_evento.
      * Argumentos:
@@ -596,10 +731,6 @@ public class Funciones_FireBase {
             Log.d(tag, "Tarea no completada (a expìrado el timeout)");
         }
 
-        return false;
-    }
-
-    public boolean infoInvitadosPrue(String id_evento, List<DocumentSnapshot> resultado) {
         return false;
     }
 
