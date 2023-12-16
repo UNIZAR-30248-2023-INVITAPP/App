@@ -20,7 +20,7 @@ public class Funciones_FireBase {
     List<Integer> respuesta = new ArrayList<>();
     Funciones_FireBase f_FB = new Funciones_FireBase();
     String DNI = "12345678", id_evento = "EuhJJf2RwRUAnIjEu9oj";
-    exitosa = f_FB.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+    exitosa = f_FB.validarInvitacionActualizaReg(DNI, id_evento, "23", respuesta);
                 if (exitosa) {//Se ha establecido la consulta con exito
         if (respuesta.get(0) == 0) {
             Log.d("BOTON_LEER", "Hay invitado con ese DNI " + DNI + " en la tabla de Invitados(asistido false)");
@@ -33,7 +33,7 @@ public class Funciones_FireBase {
         Log.d("BOTON_LEER", "Fallo en la comunicacion con valInvActualizadaReg");
     }
     */
-    public boolean validarInvitacionActualizaRegPrue(String DNI, String id_evento, List<Integer> resultado) {
+    public boolean validarInvitacionActualizaRegPrue(String DNI, String id_evento, String edad, List<Integer> resultado) {
         if(false) {
             String tag = "F_VALIDAR_INVIT";
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -63,7 +63,8 @@ public class Funciones_FireBase {
                                     .collection("Invitados").document(doc.getId());
                             docRef.update(
                                     "asistido", true,
-                                    "hora_asistido", FieldValue.serverTimestamp()
+                                    "hora_asistido", FieldValue.serverTimestamp(),
+                                    "edad", edad
                             );//Actualizamos el campo "asistido" a true del invitado y su hora de asistencia
                             resultado.add(0);//Esta invitado
                             Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");
@@ -88,9 +89,12 @@ public class Funciones_FireBase {
 
     /**
      * Comprueba que el invitado con ese DNI se encuentre invitado en el evento seleccionado y no se ha registrado ya,
-     * además actualiza el campo "asistido" a true y pone el campo "hora_asistiedo" con el timestamp actual
+     * además actualiza el campo "asistido" a true, pone el campo "hora_asistiedo" con el timestamp actual y
+     * añade la edad del invitado en el campo "edad"
      * Argumentos:
+     *  DNI       -> DNI del invitado a actualizar
      *  id_evento -> pasamos el identificador del evento donde comprobar si esta invitado
+     *  edad      -> string que indica la edad como número. Por ejemplo: "13"
      *  resultado -> guarda un List<Boolean> que contiene en su posicion 0, true o false
      *              0   esta en la lista con "asistido" a false y actualizamos el campo "asistido" a true del invitado
      *              1   el invitado existe y "asistido" esta a true
@@ -99,7 +103,7 @@ public class Funciones_FireBase {
      *  true    la lectura de los datos a sido exitosa (aunque no haya contenido)
      *  false   en caso de que salga algo mal(ha expirado timeout, no ha sido exitosa la lectura)
      * */
-    public boolean validarInvitacionActualizaReg(String DNI, String id_evento, List<Integer> resultado) {
+    public boolean validarInvitacionActualizaReg(String DNI, String id_evento, String edad, List<Integer> resultado) {
         String tag = "F_VALIDAR_INVIT";
 
         // Access a Cloud Firestore instance from your Activity
@@ -139,8 +143,9 @@ public class Funciones_FireBase {
                                 .collection("Invitados").document(doc.getId());
                         docRef.update(
                                 "asistido", true,
-                                "hora_asistido", FieldValue.serverTimestamp()
-                        );//Actualizamos el campo "asistido" a true del invitado y su hora de asistencia
+                                "hora_asistido", FieldValue.serverTimestamp(),
+                                "edad", edad
+                        );//Actualizamos el campo "asistido" a true del invitado, su hora de asistencia
 
                         resultado.add(0);//Esta invitado
                         Log.d(tag, "Hay invitado con ese DNI y se ha actualizado la asistencia");

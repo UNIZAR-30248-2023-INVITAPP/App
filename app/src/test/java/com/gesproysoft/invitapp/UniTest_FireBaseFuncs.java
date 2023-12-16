@@ -17,15 +17,15 @@ public class UniTest_FireBaseFuncs {
         List<Integer> res = new ArrayList<>();
         Funciones_FireBase f_FB = new Funciones_FireBase();
 
-        assertEquals(false, f_FB.infoInvitadosPrue("YybJNIeSZMVaXWK9Yoqo", resultado));//35 líneas
+        assertEquals(false, f_FB.infoInvitados("YybJNIeSZMVaXWK9Yoqo", resultado));//35 líneas
 
-        assertEquals(false, f_FB.validarInvitacionActualizaRegPrue("12345678Z","YybJNIeSZMVaXWK9Yoqo", res));//46 líneas
+        assertEquals(false, f_FB.validarInvitacionActualizaReg("12345678Z","YybJNIeSZMVaXWK9Yoqo", "23", res));//46 líneas
 
-        assertEquals(false, f_FB.infoEventosOrganizadorPrue("YybJNIeSZMVaXWK9Yoqo", resultado));//34 líneas
+        assertEquals(false, f_FB.infoEventosOrganizador("YybJNIeSZMVaXWK9Yoqo", resultado));//34 líneas
 
-        assertEquals(false, f_FB.validarInvitacionAsistidoPrue("12345678Z","YybJNIeSZMVaXWK9Yoqo", res));//42 líneas
+        assertEquals(false, f_FB.validarInvitacionAsistido("12345678Z","YybJNIeSZMVaXWK9Yoqo", res));//42 líneas
 
-        assertEquals(false, f_FB.DesvalidarInvitacionAsistidoPrue("YybJNIeSZMVaXWK9Yoqo","YybJNIeSZMVaXWK9Yoqo"));//27 líneas
+        assertEquals(false, f_FB.DesvalidarInvitacionAsistido("YybJNIeSZMVaXWK9Yoqo","YybJNIeSZMVaXWK9Yoqo"));//27 líneas
 
     }
 }

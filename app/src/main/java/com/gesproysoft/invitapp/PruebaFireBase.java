@@ -259,11 +259,12 @@ public class PruebaFireBase extends AppCompatActivity {
             Log.d(log + "-02", "INCORRECTO---Invitado no añadido");
         }
 
+        String edad = "23";
         //Prueba 1: Se ha podido establecer la conexion con la coleccion de Invitados
         Log.d(log + "-1", "Prueba de conexion con coleccion de Invitados");
 
         List<Integer> respuesta = new ArrayList<>();
-        exitosa = db.validarInvitacionActualizaReg("32", id_evento, respuesta);
+        exitosa = db.validarInvitacionActualizaReg("32", id_evento, edad, respuesta);
 
         if(exitosa) {//Se ha establecido la consulta con exito
             Log.d(log + "-1", "CORRECTO---Conexion establecida");
@@ -277,7 +278,7 @@ public class PruebaFireBase extends AppCompatActivity {
         //Prueba 2: El DNI pertenece a un invitado sin registrar asistencia y la registramos
         Log.d(log + "-2", "Prueba de que no esta registrada la asistencia y la registramos");
 
-        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, edad, respuesta);
         if(exitosa) {//Se ha establecido la consulta con exito
             if(respuesta.get(0) == 0) {
                 Log.d(log + "-2", "CORRECTO---Asistencia de invitado sin registrar y se registra");
@@ -297,7 +298,7 @@ public class PruebaFireBase extends AppCompatActivity {
         //Prueba 3: El DNI pertenece a un invitado registrado
         Log.d(log + "-3", "Prueba de que esta registrada la asistencia");
 
-        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, respuesta);
+        exitosa = db.validarInvitacionActualizaReg(DNI, id_evento, edad, respuesta);
         if(exitosa) {//Se ha establecido la consulta con exito
             if(respuesta.get(0) == 0) {
                 Log.d(log + "-3", "INCORRECTO---Asistencia de invitado sin registrar y se registra");
@@ -316,7 +317,7 @@ public class PruebaFireBase extends AppCompatActivity {
         //Prueba 4: El DNI no pertenece a un invitado del evento
         Log.d(log + "-4", "Prueba de que no existe el invitado con DNI \"32\"");
 
-        exitosa = db.validarInvitacionActualizaReg("32", id_evento, respuesta);
+        exitosa = db.validarInvitacionActualizaReg("32", id_evento, edad, respuesta);
         if(exitosa) {//Se ha establecido la consulta con exito
             if(respuesta.get(0) == 0) {
                 Log.d(log + "-4", "INCORRECTO---Asistencia de invitado sin registrar y se registra");
@@ -547,7 +548,7 @@ public class PruebaFireBase extends AppCompatActivity {
         //Prueba 3: El DNI pertenece a un invitado registrado
         Log.d(log + "-3", "Prueba de que esta registrada la asistencia");
 
-        db.validarInvitacionActualizaReg(DNI, id_evento, respuesta);//Validamos la sistencia
+        db.validarInvitacionActualizaReg(DNI, id_evento, "23", respuesta);//Validamos la sistencia
         exitosa = db.validarInvitacionAsistido(DNI, id_evento, respuesta);
         if(exitosa) {//Se ha establecido la consulta con exito
             if(respuesta.get(0) == 0) {
