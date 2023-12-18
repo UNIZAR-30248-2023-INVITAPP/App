@@ -168,6 +168,8 @@ public class IniciarSesion extends AppCompatActivity implements
                     .setContentText("Los datos de inicio de sesion son incorrectos")
                     .setConfirmClickListener("Cerrar", null)
                     .show();*/
+            circulo_cargando.setAlpha(1);
+            TV_Iniciar_Sesion.setAlpha(0);
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IA_Prefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("U_Identificador", "775438@unizar.es");
