@@ -72,6 +72,7 @@ public class MostrarAsistentes extends AppCompatActivity {
         String jsonListaInvitados = sharedPreferences.getString("E_ListaInvitados", null);
         eNombre = sharedPreferences.getString("E_NombreEvento", ""); // Recupera el valor almacenado en "U_Nombre"
         eId = sharedPreferences.getString("E_IdEvento", "");
+        eIdEvento = eId;
         System.out.println("NOMBRE OBTENIDO "+eNombre);
 
 
@@ -129,6 +130,12 @@ public class MostrarAsistentes extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 // Este método se llama después de que el texto ha cambiado
+                //obtenerAsistentes(ED_Buscar.getText().toString());
+            }
+        });
+        IV_Buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 obtenerAsistentes(ED_Buscar.getText().toString());
             }
         });

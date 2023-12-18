@@ -183,18 +183,18 @@ public class LeerDNI extends AppCompatActivity {
                             Funciones_FireBase db = new Funciones_FireBase();
                             Boolean exitosa;
                             List<Integer> respuesta = new ArrayList<>();
-                            exitosa = db.validarInvitacionActualizaReg(result.getText(), eId, respuesta);
+                            exitosa = db.validarInvitacionActualizaReg(result.getText().split("-")[0],result.getText().split("-")[1], eId, respuesta);
                             if (exitosa){
 
                                 if (respuesta.get(0) == 0) {
-                                    Log.d("BOTON_LEER", "Hay invitado con ese DNI " + result.getText() + " en la tabla de Invitados(asistido false)");
+
                                     TV_Nombre_Evento.setText(eNombre);
                                     TV_Descripcion_Entrada.setText("Entrada de invitación, no incluye consumiciones");
 
                                     String nombre = "";
                                     for (Map<String, String> invitado : listaInvitados) {
                                         String dni = invitado.get("DNI");
-                                        if (dni.contains(result.getText())){
+                                        if (dni.contains(result.getText().split("-")[0])){
 
                                             nombre = invitado.get("nombre");
 
@@ -202,26 +202,26 @@ public class LeerDNI extends AppCompatActivity {
                                     }
 
                                     TV_Nombre_Asistente.setText(nombre);
-                                    TV_DNI_Asistente.setText(result.getText());
+                                    TV_DNI_Asistente.setText(result.getText().split("-")[0]);
                                     CV_Nombre.setAlpha(1f);
                                     CV_Dni.setAlpha(1f);
                                     TV_Estado_Entrada.setText("Leida");
                                     TV_Estado_Entrada.setBackgroundResource(R.drawable.verde_esquinas_redondas);
                                 } else if(respuesta.get(0) == 1) {
-                                    Log.d("BOTON_LEER", "Hay invitado con ese DNI " + result.getText() + " en la tabla de Invitados(asistido true)");
+
 
                                     TV_Nombre_Evento.setText(eNombre);
                                     String nombre = "";
                                     for (Map<String, String> invitado : listaInvitados) {
                                         String dni = invitado.get("DNI");
-                                        if (dni.contains(result.getText())){
+                                        if (dni.contains(result.getText().split("-")[0])){
 
                                             nombre = invitado.get("nombre");
 
                                         }
                                     }
                                     TV_Nombre_Asistente.setText(nombre);
-                                    TV_DNI_Asistente.setText(result.getText());
+                                    TV_DNI_Asistente.setText(result.getText().split("-")[0]);
                                     CV_Nombre.setAlpha(1f);
                                     CV_Dni.setAlpha(1f);
                                     TV_Estado_Entrada.setText("Ya\nLeida");
@@ -232,9 +232,8 @@ public class LeerDNI extends AppCompatActivity {
                                     TV_Descripcion_Entrada.setText("Esta entrada ya ha sido leida anteriormente por un lector de InvitApp");
 
                                 } else {
-                                    Log.d("BOTON_LEER", "No existe el invitado con ese DNI " + result.getText() + " en la tabla de Invitados");
                                     TV_Nombre_Evento.setText("Error");
-                                    TV_Descripcion_Entrada.setText("No existe el invitado con el DNI "+result.getText()+" en la tabla de Invitados");
+                                    TV_Descripcion_Entrada.setText("No existe el invitado con el DNI "+result.getText().split("-")[0]+" en la tabla de Invitados");
                                     CV_Nombre.setAlpha(0f);
                                     CV_Dni.setAlpha(0f);
                                     TV_Estado_Entrada.setText("Error");

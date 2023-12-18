@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.cardview.widget.CardView;
@@ -133,40 +134,36 @@ public class asistentesAdaptador extends ArrayAdapter<String> {
                 if (isOn){
                     RL_Cargando.setBackgroundResource(R.drawable.gris_esquinas_redondas);
                     RL_Cargando.setAlpha(1);
-                    /*if (resultado.contains("Entrada leida correctamente")){
+                    Funciones_FireBase db = new Funciones_FireBase();
+                    Boolean exitosa;
+                    List<Integer> respuesta = new ArrayList<>();
+                    exitosa = db.validarInvitacionActualizaReg(dniAsistente.get(position), eIdEvento, "18",respuesta);
+                    if (exitosa) {
+
                         estado_entrada.setText("Leida");
                         estado_entrada.setBackgroundResource(R.drawable.verde_esquinas_redondas);
-
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy 'a las' HH:mm", new Locale("es", "ES"));
-                        Date fechaActual = new Date(System.currentTimeMillis());
-
-                        String fechaFormateada = dateFormatter.format(fechaActual);
-                        descripcion_entrada.setText("Leida el " + fechaFormateada + " por " + uUsuario);
-
-                    } // Es necesario hacer un caso en el que ya se haya leido la entrada? Tiene sentido?
-                    else {
-                        toogleLeer.setOn(false);
-
                     }
-                    RL_Cargando.setAlpha(0f);*/
+                    else{
+                        toogleLeer.setOn(false);
+                    }
+                    RL_Cargando.setAlpha(0f);
                 }
                 else{
                     //Des-leer entrada
                     RL_Cargando.setBackgroundResource(R.drawable.verde_esquinas_redondas);
                     RL_Cargando.setAlpha(1);
-                    /*if (resultado.contains("Entrada desleida correctamente")){
+                    Funciones_FireBase db = new Funciones_FireBase();
+                    Boolean exitosa;
+                    exitosa = db.DesvalidarInvitacionAsistido(dniAsistente.get(position), eIdEvento);
+                    if (exitosa) {
+
                         estado_entrada.setText("No\nLeida");
                         estado_entrada.setBackgroundResource(R.drawable.gris_esquinas_redondas);
-                        String[] datos_asistente = resultado.split(" = ");
-                        descripcion_entrada.setText(datos_asistente[3]);
-
-
-                    } // Es necesario hacer un caso en el que ya se haya des-leido la entrada? Tiene sentido?
-                                                    else {
-                        toogleLeer.setOn(true);
-
                     }
-                    RL_Cargando.setAlpha(0f);*/
+                    else{
+                        toogleLeer.setOn(true);
+                    }
+                    RL_Cargando.setAlpha(0f);
                 }
             }
         });
