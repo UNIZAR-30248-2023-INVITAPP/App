@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -159,7 +160,6 @@ public class IniciarSesion extends AppCompatActivity implements
 
             Intent seleccionarEvento = new Intent(IniciarSesion.this,SeleccionarEvento.class);
             startActivity(seleccionarEvento);
-            finish();
 
         } else {
             /*
@@ -180,6 +180,7 @@ public class IniciarSesion extends AppCompatActivity implements
             finish();
         }
     }
+
 
 
 

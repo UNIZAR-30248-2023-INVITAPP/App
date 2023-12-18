@@ -368,7 +368,18 @@
             android:elevation="4dp"
             android:background="@drawable/morado_esquinas_redondas">
 
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/circulo_cargandoldni"
+                android:alpha="0"
+                style="@style/SpinKitView.Small.FadingCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/white" />
+
             <TextView
+                android:id="@+id/TV_TxtBt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

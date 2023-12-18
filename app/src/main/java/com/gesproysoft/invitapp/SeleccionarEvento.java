@@ -51,8 +51,15 @@ public class SeleccionarEvento extends AppCompatActivity {
         invitadosEvento = new ArrayList<>();
 
 
-        refrescar_LV_Eventos.setRefreshing(true);
+        refrescar_LV_Eventos.post(new Runnable() {
+            @Override
+            public void run() {
+                refrescar_LV_Eventos.setRefreshing(true);
+            }
+        });
+
         obtenerEventos();
+        //eventosObtener(0);
 
         LV_Eventos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -93,6 +100,16 @@ public class SeleccionarEvento extends AppCompatActivity {
         });
 
 
+    }
+
+    public void eventosObtener(int milisegundos){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refrescar_LV_Eventos.setRefreshing(true);
+                obtenerEventos();
+            }
+        }, milisegundos);
     }
 
     public void obtenerEventos(){
@@ -152,7 +169,12 @@ public class SeleccionarEvento extends AppCompatActivity {
             actualizarAdaptadorSeleccion();
         } else {
             TV_EventosDisponibles.setAlpha(1);
-            refrescar_LV_Eventos.setRefreshing(false);
+            refrescar_LV_Eventos.post(new Runnable() {
+                @Override
+                public void run() {
+                    refrescar_LV_Eventos.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -160,7 +182,12 @@ public class SeleccionarEvento extends AppCompatActivity {
         eventosAdaptador adaptador = new eventosAdaptador(SeleccionarEvento.this, nombreEvento, fechaEvento, imagenEvento, lugarEvento);
         LV_Eventos.setAdapter(adaptador);
         adaptador.notifyDataSetChanged();
-        refrescar_LV_Eventos.setRefreshing(false);
+        refrescar_LV_Eventos.post(new Runnable() {
+            @Override
+            public void run() {
+                refrescar_LV_Eventos.setRefreshing(false);
+            }
+        });
         if (nombreEvento.isEmpty()){
             //Poner Mensaje fondo pantalla no hay eventos para leer
             TV_EventosDisponibles.setAlpha(1);

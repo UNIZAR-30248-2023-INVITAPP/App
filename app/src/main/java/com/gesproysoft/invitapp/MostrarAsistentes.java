@@ -155,7 +155,7 @@ public class MostrarAsistentes extends AppCompatActivity {
 
     public void obtenerAsistentes(String buscar){
         IV_Buscar.setVisibility(View.INVISIBLE);
-        RL_Cargando.setAlpha(1);
+        RL_Cargando.setAlpha(1f);
 
         nombreAsistente.clear();
         dniAsistente.clear();
@@ -218,7 +218,7 @@ public class MostrarAsistentes extends AppCompatActivity {
         adaptador.notifyDataSetChanged();
         refrescar_LV_Asistentes.setRefreshing(false);
         IV_Buscar.setVisibility(View.VISIBLE);
-        RL_Cargando.setAlpha(0);
+        RL_Cargando.setAlpha(0f);
 
         if (!nombreAsistente.isEmpty()){
             TV_Ningun_Asistente.setAlpha(0);
@@ -227,6 +227,8 @@ public class MostrarAsistentes extends AppCompatActivity {
             TV_Ningun_Asistente.setAlpha(1);
         }
     }
+
+
 
     public int getStatusBarHeight() {
         int result = 0;

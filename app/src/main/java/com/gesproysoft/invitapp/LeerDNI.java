@@ -43,6 +43,7 @@ import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.common.reflect.TypeToken;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -82,6 +83,8 @@ public class LeerDNI extends AppCompatActivity {
     Boolean puedeLeer = true;
     String url_Get_Info;
     TextView TV_Descripcion_Entrada, TV_Nombre_Asistente, TV_DNI_Asistente, TV_Estado_Entrada;
+    TextView TV_TxtBt;
+    SpinKitView sp_cargano;
 
     List<Map<String, String>> listaInvitados;
 
@@ -105,6 +108,9 @@ public class LeerDNI extends AppCompatActivity {
         V_Barra_Vacia = findViewById(R.id.V_Barra_Vacia);
         RL_Informacion = findViewById(R.id.RL_Informacion);
         RL_Cargando = findViewById(R.id.RL_Cargando);
+        sp_cargano = findViewById(R.id.circulo_cargandoldni);
+        TV_TxtBt = findViewById(R.id.TV_TxtBt);
+        sp_cargano.setAlpha(0f);
         RL_Cargando.setAlpha(0f);
         RL_Informacion.setAlpha(0f);
 
@@ -112,8 +118,11 @@ public class LeerDNI extends AppCompatActivity {
         BT_Asistentes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sp_cargano.setAlpha(1f);
+                TV_TxtBt.setAlpha(0f);
                 Intent asistentes = new Intent(LeerDNI.this, MostrarAsistentes.class);
                 startActivity(asistentes);
+                terminarCargar(3000);
             }
         });
 
@@ -272,6 +281,23 @@ public class LeerDNI extends AppCompatActivity {
                     public void run() {
                         // Código que se ejecutará en el hilo de la interfaz de usuario
                         puedeLeer = true;
+                    }
+                });
+            }
+        }, milisegundos);
+    }
+
+    public void terminarCargar(int milisegundos){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Código que se ejecutará después de x segundos en el hilo de fondo
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Código que se ejecutará en el hilo de la interfaz de usuario
+                        sp_cargano.setAlpha(0f);
+                        TV_TxtBt.setAlpha(1f);
                     }
                 });
             }

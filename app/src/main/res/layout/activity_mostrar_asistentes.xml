@@ -115,34 +115,36 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/lupa"
-        android:padding="10dp"
         android:layout_below="@+id/TV_VACIO_1"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:alpha="1"
         android:background="@drawable/morado_esquinas_redondas"
-        android:elevation="5dp" />
+        android:elevation="5dp"
+        android:padding="10dp"
+        android:src="@drawable/lupa" />
+
     <RelativeLayout
         android:id="@+id/RL_Cargando"
-        android:alpha="0"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_below="@+id/TV_VACIO_1"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/TV_VACIO_1"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:alpha="1"
         android:background="@drawable/morado_esquinas_redondas">
 
         <com.github.ybq.android.spinkit.SpinKitView
-            android:layout_centerInParent="true"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/spin_kit"
             style="@style/SpinKitView.Small.FadingCircle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:alpha="1"
             app:SpinKit_Color="@color/white" />
 
     </RelativeLayout>
