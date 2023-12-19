@@ -192,7 +192,7 @@ public class LeerDNI extends AppCompatActivity {
                             Funciones_FireBase db = new Funciones_FireBase();
                             Boolean exitosa;
                             List<Integer> respuesta = new ArrayList<>();
-                            exitosa = db.validarInvitacionActualizaReg(result.getText().split("-")[0],result.getText().split("-")[1], eId, respuesta);
+                            exitosa = db.validarInvitacionActualizaReg(result.getText().split("-")[0],eId, result.getText().split("-")[1], respuesta);
                             if (exitosa){
 
                                 if (respuesta.get(0) == 0) {
